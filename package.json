@@ -1,0 +1,48 @@
+{
+    "name": "realtime-development",
+    "preferGlobal": true,
+    "version": "0.0.1",
+    "author": "Sam Hatoum <sam@xolvio.com>",
+    "description": "a unit and acceptance testing approach to Meteor apps",
+    "contributors": [
+        {
+            "name": "Paul Dunnavant",
+            "email": "paul@xolvio.com"
+        },
+        {
+            "name": "Miguel Alvarado",
+            "email": "miguel@xolvio.com"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/xolvio/acute-feedback-development-with-meteor.git"
+    },
+    "keywords": [
+        "feedback",
+        "test",
+        "tdd",
+        "rtd",
+        "acceptance",
+        "testing"
+    ],
+    "dependencies": {
+        "selenium-webdriver": "2.31.x"
+    },
+    "analyze": false,
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-exec": "~0.4.0",
+        "grunt-bg-shell": "~2.0.1",
+        "grunt-contrib-watch": "~0.3.1",
+        "grunt-istanbul": "~0.2.1",
+        "freeport": "1.0.x",
+        "request": "2.9.x",
+        "hash_file": "0.0.x"
+    },
+    "bundledDependencies": [],
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.10"
+    }
+}
