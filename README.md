@@ -9,10 +9,6 @@ Every time you save a file:
 * All your end-to-end acceptance tests will run
 * You'll get a test-coverage report
 
-Why?
-----
-With the combination of acceptance and unit tests, you can consistently achieve 100% test coverage. What's missing is the tools to let you know how you're doing. RTD aims to solve this by providing these tools.
-
 Instructions
 ------------
 Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.com) and that these dependencies globally installed:
@@ -20,7 +16,7 @@ Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.c
   npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node
 ```
 
-Next you'll need to get RTD. You can use a git sub-module as follows: (advised method as you'll get updates as we do them)
+Next you'll need to get RTD. You can use a git sub-module as follows: (advised method as you'll get updates to the stubs/runners as we do them)
 ```bash
 cd <your project root>
 mkdir test; git submodule add git@github.com:xolvio/rtd.git ./test/rtd; cd test/rtd; npm install;
@@ -40,11 +36,19 @@ Now every time you start development, just run this: (the first time will a few 
 
 And enjoy seeing all your acceptance & unit tests run with coverage reports, every time you save a file.
 
+How does it work?
+-----------------
+* Karma is configured with file watchers, Jasmine (can easily be switched to Mocha), console reporter and test coverage
+* A set of Template/Collection/Session stubs ensure code can load without Meteor
+* The stubs expose attributes, functions and events to [Jasmine](https://github.com/pivotal/jasmine) so that [spies](https://github.com/pivotal/jasmine/wiki/Spies) can mock and assert
+* A grunt task downloads and starts selenium-server for [WebdriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs)
+* A grunt file watcher monitors the main app and keeps a mirror app in sync, where the destructive acceptance tests run
+* The default grunt task runs all of the above together
+
 Find out more
 -------------
 * [What is RTD](https://github.com/xolvio/real-time-development-with-meteor/wiki/Real-Time-Development)
 * [What is ATDD](http://mydailyvowels.com/atdd-tdd-agile) ([more](http://www.qualitestgroup.com/Acceptance-Test-Driven-Development))
-* [How RTD for Meteor works](https://github.com/xolvio/rtd)
 * [Unit-testing with Meteor](http://blog.xolv.io/2013/04/unit-testing-with-meteor.html)
 * [End-to-end testing with Meteor](http://blog.xolv.io/2013/04/end-to-end-testing-for-web-apps-meteor.html)
 * [Use RTD in your Meteor app](https://github.com/xolvio/rtd)
