@@ -52,5 +52,5 @@ Find out more
 * [Unit-testing with Meteor](http://blog.xolv.io/2013/04/unit-testing-with-meteor.html)
 * [End-to-end testing with Meteor](http://blog.xolv.io/2013/04/end-to-end-testing-for-web-apps-meteor.html)
 * [Use RTD in your Meteor app](https://github.com/xolvio/rtd)
-* [See an example of RTD with Meteor + Leaderboard sample app](https://github.com/xolvio/rtd-meteor-example)
+* [See an example of RTD with Meteor + Leaderboard sample app](https://github.com/xolvio/real-time-development-with-meteor)
 * [Get started by forking a boilerplate project with AWS deployment support](https://github.com/xolvio/rtd-meteor-boilerplate)
