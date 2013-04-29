@@ -13,6 +13,9 @@ files = [
     // they set mocks ahead of time for the units so they have to be loaded first
     'test/unit/**/*.js',
 
+    // simulate loading order of meteor folder structure
+    'app/lib/**/*.js',
+
     // now all the dependencies have been sorted, the app code can be loaded
     'app/**/*.js'
 ];
