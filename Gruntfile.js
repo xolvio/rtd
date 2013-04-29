@@ -1,5 +1,4 @@
 (function () {
-
     "use strict";
 
     var projectBasePath = '../..',
@@ -7,16 +6,7 @@
 
     module.exports = function (grunt) {
 
-        var runCmd = fs.existsSync(projectBasePath + '/app/smart.json') 
-                        ? 'mrt' 
-                        : 'meteor run',
-            settingsPath = getSettingsPath(grunt);
-
-        if (settingsPath) {
-          runCmd += ' --settings ' + settingsPath;
-        }
-
-        console.log(runCmd);
+        var runCmd = getRunCmd(grunt);
 
         grunt.initConfig({
             basePath: projectBasePath,
@@ -99,9 +89,18 @@
             'startSeleniumServer',
             'watch'
         ]);
-    };  // end module.exports
+    };
 
+    function getRunCmd(grunt) {
+        var runCmd = fs.existsSync(projectBasePath + '/app/smart.json') ? 'mrt' : 'meteor run',
+            settingsPath = getSettingsPath(grunt);
 
+        if (settingsPath) {
+            runCmd += ' --settings ' + settingsPath;
+        }
+        console.log('resolved meteor run command to [' + runCmd + ']');
+        return runCmd;
+    }
 
     /**
      * Returns the path to a Meteor.settings file, if applicable.
@@ -122,16 +121,15 @@
     function getSettingsPath (grunt) {
       var settingsPath,
           viaOption,
-          fileExists = false,
-          relativeToProjectBase = false;
+          fileExists,
+          relativeToProjectBase;
 
       viaOption = grunt.option('settingsPath');
-      settingsPath = viaOption || 
-                     (projectBasePath + '/app/settings.json');
+      settingsPath = viaOption || (projectBasePath + '/app/settings.json');
       fileExists = fs.existsSync(settingsPath);
 
       if (viaOption && !fileExists) {
-        grunt.fatal("Settings file '" + viaOption + "' not found.  " + 
+        grunt.fatal("Settings file '" + viaOption + "' not found.  " +
                     "Note: Path must be relative to the current directory.");
       }
       if (!fileExists) {
@@ -149,14 +147,7 @@
           settingsPath = settingsPath.substring(5);
         }
 
-      } else {
-        // not relative, use directly
-        // ex. '~/project/settings.json'
       }
-
       return settingsPath;
-
-    }  // end getSettingsPath 
-
-
+    }
 })();
