@@ -13,8 +13,9 @@
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/**/*'
                 ],
-                tasks: ['bgShell:synchronizeMirrorApp', 'bgShell:runTests']
+                tasks: ['bgShell:synchronizeMirrorApp', 'bgShell:instrumentCode', 'bgShell:runTests']
             },
+
             bgShell: {
                 _defaults: {
                     bg: true,
@@ -29,6 +30,10 @@
                     cmd: 'cd <%= basePath %>/test/rtd;' +
                         'karma start;'
                 },
+                instrumentCode: {
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app;',
+                    bg: false
+                },
                 killAll: {
                     cmd: "kill `ps -ef|grep -i meteor| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i mongod| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
@@ -36,7 +41,9 @@
                         "kill `ps -ef|grep -i karma| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i phantomjs| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;",
                     fail: false,
-                    bg: false
+                    bg: false,
+                    stdout: false,
+                    stderr: false
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
@@ -70,6 +77,7 @@
         grunt.registerTask('default', [
             'bgShell:killAll',
             'bgShell:synchronizeMirrorApp',
+            'bgShell:instrumentCode',
             'bgShell:startMirrorApp',
             'bgShell:startKarma',
             'bgShell:startApp',
