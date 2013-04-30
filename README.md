@@ -11,9 +11,9 @@ Every time you save a file:
 
 Instructions
 ------------
-Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.com) and that these dependencies globally installed:
+Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.com) and that these dependencies globally installed (you may need to run this as sudo, depending on how you're setup)
 ```bash
-  npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node
+  npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node istanbul
 ```
 
 Next you need to move your meteor code into an app directory the structure of your application as follows:
