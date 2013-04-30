@@ -16,17 +16,37 @@ Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.c
   npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node
 ```
 
-Next you'll need to get RTD. You can use a git sub-module as follows: (advised method as you'll get updates to the stubs/runners as we do them)
+Next you need to move your meteor code into an app directory the structure of your application as follows:
+
+    ├── <project root>
+    │ ├── .git
+    │ ├── app
+    │ │ └── .meteor
+    │ │ └── <your meteor code here>
+
+RTD will live under the test directory. You can use a git sub-module as follows: (advised method as you'll get updates to the stubs/runners as we do them)
 ```bash
 cd <your project root>
-mkdir test; git submodule add git@github.com:xolvio/rtd.git ./test/rtd; cd test/rtd; npm install;
+mkdir -p ./test/acceptance/fixtures; mkdir ./test/unit; touch ./test/acceptance/fixtures/empty.js;
+git submodule add git@github.com:xolvio/rtd.git ./test/rtd; cd test/rtd; npm install;
 ```
 
-Alternatively, you can download a copy of the RTD library: (you'll have to redo this when you want the latest updates)
-```bash
-cd <your project root>
-curl -O -L https://github.com/xolvio/rtd/archive/master.zip; unzip master.zip; mkdir test; mv rtd-master test/rtd; rm master.zip; cd test/rtd; npm install;
-```
+Once the above runs, you should see this:
+
+    ├── <project root>
+    │ ├── .git
+    │ ├── app
+    │ │ └── .meteor
+    │ │ └── <your meteor code here>
+    │ ├── test
+    │ │ └── acceptance
+    | │ │ └── fixtures
+    | | │ │ └── empty.js
+    | │ │ └── <your end-to-end tests here>
+    │ │ └── rtd
+    | │ │ └── <a whole bunch of stuff>
+    │ │ └── unit
+    | │ │ └── <your unit tests here>
 
 Now every time you start development, just run this: (the first time will take a few minutes as selenium-server & chromedriver are downloaded)
 ```bash
