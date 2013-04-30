@@ -1,9 +1,9 @@
 Real Time Development ([RTD](https://github.com/xolvio/real-time-development-with-meteor/wiki/Real-Time-Development)) with Meteor
 =======================================
-This is an add-in module to use in your development and build process that allows you to do acceptance test driven development ([ATDD](http://mydailyvowels.com/atdd-tdd-agile)) in an [RTD](https://github.com/xolvio/real-time-development-with-meteor/wiki/Real-Time-Development) fashion with Meteor.
+This is an add-in module to use in your development and build process that allows you to do [unit testing](http://blog.xolv.io/2013/04/unit-testing-with-meteor.html), and [end-to-end testing](http://blog.xolv.io/2013/04/end-to-end-testing-for-web-apps-meteor.html). The combination of these makes it possible to do acceptance test driven development ([ATDD](http://mydailyvowels.com/atdd-tdd-agile)) in an [RTD](https://github.com/xolvio/real-time-development-with-meteor/wiki/Real-Time-Development) fashion with Meteor.
 
-What does it do?
-----------------
+What does it really do?
+-----------------------
 Every time you save a file:
 * All your unit tests will run
 * All your end-to-end acceptance tests will run
@@ -28,7 +28,7 @@ cd <your project root>
 curl -O -L https://github.com/xolvio/rtd/archive/master.zip; unzip master.zip; mkdir test; mv rtd-master test/rtd; rm master.zip; cd test/rtd; npm install;
 ```
 
-Now every time you start development, just run this: (the first time will a few minutes as selenium is downloaded)
+Now every time you start development, just run this: (the first time will take a few minutes as selenium-server & chromedriver are downloaded)
 ```bash
   cd <your project root>/test/rtd
   grunt
@@ -38,12 +38,12 @@ And enjoy seeing all your acceptance & unit tests run with coverage reports, eve
 
 How does it work?
 -----------------
-* Karma is configured with file watchers, Jasmine (can easily be switched to Mocha), console reporter and test coverage
-* A set of Template/Collection/Session stubs ensure code can load without Meteor
+* [Karma](https://github.com/karma-runner) is configured with file watchers, [Jasmine](https://github.com/pivotal/jasmine) (can easily be switched to [Mocha](http://visionmedia.github.io/mocha/)), console reporter and test coverage
+* A set of [Template/Collection/Session](https://github.com/xolvio/rtd/blob/master/lib/meteor-stubs.js) stubs ensure code can load without Meteor
 * The stubs expose attributes, functions and events to [Jasmine](https://github.com/pivotal/jasmine) so that [spies](https://github.com/pivotal/jasmine/wiki/Spies) can mock and assert
-* A grunt task downloads and starts selenium-server for [WebdriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs)
-* A grunt file watcher monitors the main app and keeps a mirror app in sync, where the destructive acceptance tests run
-* The default grunt task runs all of the above together
+* A [grunt](http://gruntjs.com/) task downloads and starts selenium-server for [WebdriverJS](https://code.google.com/p/selenium/wiki/WebDriverJs)
+* A [grunt](http://gruntjs.com/) file watcher monitors the main app and keeps a mirror app in sync, where the destructive acceptance tests run
+* The default [grunt](http://gruntjs.com/) task runs all of the above together
 
 Find out more
 -------------
