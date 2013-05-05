@@ -37,7 +37,7 @@
 
         var find = './app';
         var re = new RegExp(find, 'g');
-        data = data.replace(re, '/Users/sam/WebstormProjects/xolv.it/app');
+        data = data.replace(re, projectBasePath.substring(0, projectBasePath.indexOf('/test/rtd')) + '/app');
 
         var options = {
             hostname: host,
