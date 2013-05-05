@@ -270,7 +270,7 @@
             'bgShell:instrumentCode',
             'bgShell:startMirrorApp',
             'bgShell:startKarma',
-//            'bgShell:startApp',
+            'bgShell:startApp',
             'watch'
         ]);
     };
