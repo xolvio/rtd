@@ -1,0 +1,5 @@
+This is RTD + Meteor istanbul code coverage tool that combines coverage from unit and end-to-end tests to give a true indication of test coverage.
+
+It's a partial port of https://github.com/gotwarlost/istanbul-middleware/ and also uses code from https://github.com/tmeasday/meteor-router
+
+Big Kudos to both of the above amazing coders.
