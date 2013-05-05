@@ -15,6 +15,8 @@ files = [
 
     // simulate loading order of meteor folder structure
     'app/lib/**/*.js',
+    'app/client/lib/**/*.js',
+    'app/server/lib/**/*.js',
 
     // now all the dependencies have been sorted, the app code can be loaded
     'app/**/*.js'
