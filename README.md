@@ -7,7 +7,9 @@ What does it really do?
 Every time you save a file:
 * All your unit tests will run
 * All your end-to-end acceptance tests will run
-* You'll get a test-coverage report
+* You'll get a combined test-coverage (pretty) report from the units and end-to-end run
+
+RTD by default will fail if you don't have 100% coverage, but you can relax this in the threshold settings.
 
 Instructions
 ------------
@@ -55,6 +57,8 @@ Now every time you start development, just run this: (the first time will take a
 ```
 
 And enjoy seeing all your acceptance & unit tests run with coverage reports, every time you save a file.
+
+To see the actual coverage report in detail, go to [http://localhost:8000/coverage](http://localhost:8000/coverage)
 
 How does it work?
 -----------------
