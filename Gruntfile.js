@@ -206,7 +206,7 @@
                     cmd: 'export NODE_PATH="$(pwd)/node_modules";' +
                         'jasmine-node <%= basePath %>/test/acceptance/;',
                     bg: false,
-                    fail: false
+                    fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'export NODE_PATH="$(pwd)/node_modules";' +
