@@ -139,12 +139,12 @@
             seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a',
             watch: {
                 files: [
-                    '<%= basePath %>/build/**/*',
+                    '<%= basePath %>/test/unit/**/*',
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/app/**/*',
-                    '!<%= basePath %>/app/.meteor/**/*'
+                    '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
-                tasks: ['bgShell:touchUnitTests', 'bgShell:synchronizeMirrorApp', 'bgShell:instrumentCode', 'bgShell:runTests', 'postLatestUnitCoverage', 'bgShell:killReports', 'bgShell:runCoverageCheck']
+                tasks: ['bgShell:karmaRun', 'bgShell:synchronizeMirrorApp', 'bgShell:instrumentCode', 'bgShell:runTests', 'postLatestUnitCoverage', 'bgShell:killReports', 'bgShell:runCoverageCheck']
             },
             bgShell: {
                 _defaults: {
@@ -219,10 +219,10 @@
                     bg: false,
                     fail: false
                 },
-                touchUnitTests: {
-                    cmd: 'touch $(find <%= basePath %>/test/unit | grep .js | head -1)',
+                karmaRun: {
+                    cmd: 'karma run',
                     bg: false,
-                    fail: false
+                    fail: true
                 }
             },
 
