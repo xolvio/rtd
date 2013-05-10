@@ -25,7 +25,7 @@ files = [
 
 // list of files to exclude
 exclude = [
-    'app/lib/3rd/**/*.js',
+    '**/3rd/**/*.js',
     '**/istanbul-middleware-port/**/*',
     'karma.conf.js',
     'app/.meteor/local'

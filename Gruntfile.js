@@ -144,7 +144,15 @@
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
-                tasks: ['bgShell:karmaRun', 'bgShell:synchronizeMirrorApp', 'bgShell:instrumentCode', 'bgShell:runTests', 'postLatestUnitCoverage', 'bgShell:killReports', 'bgShell:runCoverageCheck']
+                tasks: [
+                    'bgShell:karmaRun',
+                    'bgShell:synchronizeMirrorApp',
+                    'bgShell:instrumentCode',
+                    'bgShell:runTests',
+                    'postLatestUnitCoverage',
+                    'bgShell:killReports',
+                    'bgShell:runCoverageCheck'
+                ]
             },
             bgShell: {
                 _defaults: {
@@ -268,6 +276,7 @@
             'downloadAndOrStartSelenium',
             'bgShell:synchronizeMirrorApp',
             'bgShell:instrumentCode',
+            // TODO collect coverage from untouched code first - as to collect files
             'bgShell:startMirrorApp',
             'bgShell:startKarma',
             'bgShell:startApp',
