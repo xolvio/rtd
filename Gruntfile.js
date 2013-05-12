@@ -189,8 +189,8 @@
                     cmd: "rm <%= basePath %>/build/reports/coverage/*.json;",
                     fail: false,
                     bg: false,
-                    stdout: false,
-                    stderr: false
+                    stdout: true,
+                    stderr: true
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
@@ -220,7 +220,7 @@
                     cmd: 'export NODE_PATH="$(pwd)/node_modules";' +
                         'jasmine-node <%= basePath %>/test/rtd/lib;',
                     bg: false,
-                    fail: false
+                    fail: true
                 },
                 touchMirrorApp: {
                     cmd: 'touch mirror_app/.meteor/packages;',
@@ -230,10 +230,9 @@
                 karmaRun: {
                     cmd: 'karma run',
                     bg: false,
-                    fail: true
+                    fail: false
                 }
             },
-
             'unzip': {
                 chromeDriver: {
                     src: '<%= basePath %>/test/rtd/lib/bin/chromedriver2_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
