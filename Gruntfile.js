@@ -275,7 +275,6 @@
             'downloadAndOrStartSelenium',
             'bgShell:synchronizeMirrorApp',
             'bgShell:instrumentCode',
-            // TODO collect coverage from untouched code first - as to collect files
             'bgShell:startMirrorApp',
             'bgShell:startKarma',
             'bgShell:startApp',
