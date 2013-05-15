@@ -203,7 +203,7 @@
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ mirror_app;' +
                         'echo >> mirror_app/.meteor/packages; echo http >> mirror_app/.meteor/packages;' +
-                        'mkdir mirror_app/packages;' +
+                        'mkdir -p mirror_app/packages;' +
                         'cd mirror_app/packages;' +
                         'ln -s ../../lib/istanbul-middleware-port .;' +
                         'cd ../..;' +
