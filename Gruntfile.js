@@ -228,9 +228,9 @@
                     fail: false
                 },
                 karmaRun: {
-                    cmd: 'karma run',
+                    cmd: 'karma run;',
                     bg: false,
-                    fail: false
+                    fail: true
                 }
             },
             'unzip': {
