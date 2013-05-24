@@ -28,7 +28,8 @@ exclude = [
     '**/3rd/**/*.js',
     '**/istanbul-middleware-port/**/*',
     'karma.conf.js',
-    'app/.meteor/local'
+    'app/.meteor/local',
+    'app/server/fixture.js'
 ];
 
 preprocessors = {
