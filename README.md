@@ -9,7 +9,7 @@ Every time you save a file:
 * All your end-to-end acceptance tests will run
 * You'll get a combined test-coverage (pretty) report from the units and end-to-end run
 
-RTD by default will fail if you don't have 100% coverage, but you can relax this in the threshold settings.
+RTD by default will fail if you don't have 100% test coverage, but you can relax this in the threshold settings.
 
 Instructions
 ------------
@@ -17,6 +17,7 @@ Ensure you have [node](http://nodejs.org/download/) and [Meteor](http://meteor.c
 ```bash
   npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node istanbul
 ```
+If you have any issues with phantomJS, you may need to [do this](https://github.com/xolvio/rtd/issues/9)
 
 Next you need to move your meteor code into an app directory the structure of your application as follows:
 
