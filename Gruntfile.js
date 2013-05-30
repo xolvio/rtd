@@ -9,12 +9,12 @@
         var coverageDir = projectBasePath + '/build/reports/coverage';
 
         if (!fs.existsSync(coverageDir)) {
-            return;
+            return null;
         }
 
         var files = fs.readdirSync(coverageDir);
         if (files.length === 0) {
-            return;
+            return null;
         }
         var newestTime = 0, newestFile;
         for (var i = 0; i < files.length; i += 1) {
@@ -73,7 +73,7 @@
         if (settingsPath) {
             runCmd += ' --settings ' + settingsPath;
         }
-        console.log('resolved meteor run command to [' + runCmd + ']');
+        //console.log('resolved meteor run command to [' + runCmd + ']');
         return runCmd;
     }
 
@@ -130,6 +130,13 @@
 
         var runCmd = getRunCmd(grunt);
 
+        // TODO make this only happen if in verbose/debug mode
+        grunt.log.header = function () {
+            //console.log('**** HEADER ****', arguments);
+        };
+        grunt.log.ok = function () {
+        };
+
         grunt.initConfig({
             basePath: projectBasePath,
             chromeDriverOs: 'mac32', // You can also do linux_64
@@ -139,7 +146,8 @@
             seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a',
             watch: {
                 files: [
-                    '<%= basePath %>/test/unit/**/*',
+                    '<%= basePath %>/test/unit/**/*.js',
+                    '<%= basePath %>/test/rtd/lib/**/*.js',
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
@@ -194,11 +202,11 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000;'
+                        runCmd + ' --port 3000 > /dev/null;'
                 },
                 startMirrorApp: {
                     cmd: 'cd <%= basePath %>/test/rtd/mirror_app;' +
-                        runCmd + ' --port 8000;'
+                        runCmd + ' --port 8000  > /dev/null;'
                 },
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ mirror_app;' +
@@ -228,7 +236,7 @@
                     fail: false
                 },
                 karmaRun: {
-                    cmd: 'karma run;',
+                    cmd: 'echo .; karma run  > /dev/null 2>&1;',
                     bg: false,
                     fail: true
                 }
@@ -255,8 +263,8 @@
 
         grunt.registerTask('downloadAndOrStartSelenium', 'downloadAndOrStartSelenium', function () {
             var done = this.async();
-            require(projectBasePath + '/test/rtd/lib/selenium-launcher.js')(function (er, selenium) {
-                console.log('selenium-server started on ' + selenium.host + ':' + selenium.port);
+            require(projectBasePath + '/test/rtd/lib/selenium-launcher.js')(function (/*er, selenium*/) {
+                //console.log('selenium-server started on ' + selenium.host + ':' + selenium.port);
                 if (!fs.existsSync(projectBasePath + '/test/rtd/lib/bin/chromedriver')) {
                     grunt.task.run('unzip', 'chmod');
                 }
