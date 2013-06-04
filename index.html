@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="RTD from Xolvio : Test Runner for Meteor" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>RTD from Xolvio</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/xolvio/rtd">View on GitHub</a>
+
+          <h1 id="project_title">RTD from Xolvio</h1>
+          <h2 id="project_tagline">Test Runner for Meteor</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/xolvio/rtd/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/xolvio/rtd/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h3>
+<a name="what-is-rtd" class="anchor" href="#what-is-rtd"><span class="octicon octicon-link"></span></a>What is RTD</h3>
+
+<hr><p>RTD is the development paradigm used at Xolvio. It's exactly like having a continuous integration server on your machine. Every time you save a file RTD will:</p>
+
+<ul>
+<li>Run all your unit tests in <strong>any browser</strong> [default: PhantomJS]</li>
+<li>Run all your acceptance tests in <strong>any browser</strong> [default: Chrome]</li>
+<li>Combines test coverage from <strong>unit and acceptance</strong> runs</li>
+<li>Checks the coverage thresholds and provides a pretty report [default: 100%]</li>
+</ul><p>We have focussed our efforts on making RTD as seamless and fast as possible. It will run in the background without bothering your workflow and you simply get pass/fail as you develop. </p>
+
+<h3>
+<a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Instructions</h3>
+
+<hr><p>Ensure you have <a href="http://nodejs.org/download/">node</a> and <a href="http://meteor.com">Meteor</a> and that these dependencies globally installed (you may need to run this as sudo, depending on how you're setup)</p>
+
+<div class="highlight"><pre><span class="nv">$ </span>npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node istanbul
+</pre></div>
+
+<p>If you have any issues with phantomJS, you may need to <a href="https://github.com/xolvio/rtd/issues/9">do this</a></p>
+
+<p>Next you need to move your meteor code into an app directory the structure of your application as follows:</p>
+
+<pre><code>├── &lt;project root&gt;
+│ ├── .git
+│ ├── app
+│ │ └── .meteor
+│ │ └── &lt;your meteor code here&gt;
+</code></pre>
+
+<p>RTD will live under the test directory. You can use a git sub-module as follows: (advised method as you'll get updates to the stubs/runners as we do them)</p>
+
+<div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;
+<span class="nv">$ </span>mkdir -p ./test/acceptance/fixtures; mkdir ./test/unit; touch ./test/acceptance/fixtures/empty.js;
+<span class="nv">$ </span>git submodule add git@github.com:xolvio/rtd.git ./test/rtd; <span class="nb">cd test</span>/rtd; npm install;
+</pre></div>
+
+<p>Once the above runs, you should see this:</p>
+
+<pre><code>├── &lt;project root&gt;
+│ ├── .git
+│ ├── app
+│ │ └── .meteor
+│ │ └── &lt;your meteor code here&gt;
+│ ├── test
+│ │ └── acceptance
+| │ │ └── fixtures
+| | │ │ └── empty.js
+| │ │ └── &lt;your end-to-end tests here&gt;
+│ │ └── rtd
+| │ │ └── &lt;a whole bunch of stuff&gt;
+│ │ └── unit
+| │ │ └── &lt;your unit tests here&gt;
+</code></pre>
+
+<p>Now every time you start development, just run this: (the first time will take a few minutes as selenium-server &amp; chromedriver are downloaded)</p>
+
+<div class="highlight"><pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;/test/rtd
+<span class="nv">$ </span>grunt
+</pre></div>
+
+<p>Enjoy using RTD</p>
+
+<p>To see the actual coverage report in detail, go to <a href="http://localhost:8000/coverage">http://localhost:8000/coverage</a></p>
+
+<h3>
+<a name="rtd-philosophy" class="anchor" href="#rtd-philosophy"><span class="octicon octicon-link"></span></a>RTD Philosophy</h3>
+
+<hr><p>The ability to capture and deal with feedback is a great indicator of quality, both of working practices and the end deliverables. Feedback comes in all shapes and sizes and <strong>the earlier feedback can be captured, the easier and cheaper it is to deal with</strong>. </p>
+
+<p>What if we could get feedback in realtime? It's an ideal for sure, but consider the trends of Agile development, lean startups, super fast test executions with file watcher triggers and so forth. You could say we're not that far off from this ideal with all the magic efforts the community has put in.</p>
+
+<p>From a developer's perspective, here are the key feedback areas and how they are detected:</p>
+
+<table>
+<tr>
+<th>Feedback</th>
+<th>Detection mechanisms</th>
+<th>Currently Implemented</th>
+</tr>
+<tr>
+<td>Code quality</td>
+<td>Static analysis</td>
+<td>Test Coverage</td>
+</tr>
+<tr>
+<td>Regression</td>
+<td>Automated testing</td>
+<td>Unit &amp; end-to-end acceptance</td>
+</tr>
+<tr>
+<td>Exceptions</td>
+<td>Logging</td>
+<td><em>Coming Soon</em></td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>Monitoring</td>
+<td><em>Coming Soon</em></td>
+</tr>
+</table><p>Of course each one of those detection mechanisms needs to be implemented, and this is often missed out all together in an end-to-end deployment pipeline, let alone on an individual developer's machine. RTD is the toolset and wiring required to get the above-mentioned feedback locally, in realtime.</p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">RTD from Xolvio maintained by <a href="https://github.com/xolvio">xolvio</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-41487105-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
