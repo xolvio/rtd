@@ -177,7 +177,7 @@
                         'karma start;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**";',
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**" > /dev/null 2>&1;',
                     bg: false
                 },
                 killAll: {
@@ -219,15 +219,23 @@
                         'cp ../acceptance/fixtures/* mirror_app/server;',
                     bg: false
                 },
+                karmaRun: {
+                    cmd: 'echo ; echo - - - Running unit tests - - -;' +
+                        'karma run > /dev/null 2>&1;',
+                    bg: false,
+                    fail: true
+                },
                 runTests: {
-                    cmd: 'export NODE_PATH="$(pwd)/node_modules";' +
+                    cmd: 'echo - - - Running acceptance tests - - -;' +
+                        'export NODE_PATH="$(pwd)/node_modules";' +
                         'jasmine-node <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
-                    cmd: 'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node <%= basePath %>/test/rtd/lib;',
+                    cmd: 'echo - - - Running coverage tests - - -;' +
+                        'export NODE_PATH="$(pwd)/node_modules";' +
+                        'jasmine-node --noStack <%= basePath %>/test/rtd/lib;',
                     bg: false,
                     fail: true
                 },
@@ -235,11 +243,6 @@
                     cmd: 'touch mirror_app/.meteor/packages;',
                     bg: false,
                     fail: false
-                },
-                karmaRun: {
-                    cmd: 'echo .; karma run  > /dev/null 2>&1;',
-                    bg: false,
-                    fail: true
                 }
             },
             'unzip': {
