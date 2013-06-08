@@ -268,7 +268,6 @@
         grunt.registerTask('downloadAndOrStartSelenium', 'downloadAndOrStartSelenium', function () {
             var done = this.async();
             require(projectBasePath + '/test/rtd/lib/selenium-launcher.js')(function (/*er, selenium*/) {
-                //console.log('selenium-server started on ' + selenium.host + ':' + selenium.port);
                 if (!fs.existsSync(projectBasePath + '/test/rtd/lib/bin/chromedriver')) {
                     grunt.task.run('unzip', 'chmod');
                 }
@@ -282,6 +281,12 @@
             });
         });
 
+        console.log('Launching Selenium-server on port 4444');
+        console.log('Launching Karma listener on port 9876');
+        console.log('Launching Karma runner on port 9100');
+        console.log('Launching Meteor on port 3000');
+        console.log('Launching Mirror on port 8000');
+
         grunt.registerTask('default', [
             'bgShell:killAll',
             'downloadAndOrStartSelenium',
@@ -292,6 +297,7 @@
             'bgShell:startApp',
             'watch'
         ]);
+
     };
 
 })();
