@@ -281,11 +281,13 @@
             });
         });
 
-        console.log('Launching Selenium-server on port 4444');
-        console.log('Launching Karma listener on port 9876');
-        console.log('Launching Karma runner on port 9100');
-        console.log('Launching Meteor on port 3000');
-        console.log('Launching Mirror on port 8000');
+        grunt.registerTask('outputPorts', 'outputPorts', function () {
+            console.log('Launching Selenium-server on port 4444');
+            console.log('Launching Karma listener on port 9876');
+            console.log('Launching Karma runner on port 9100');
+            console.log('Launching Meteor on port 3000');
+            console.log('Launching Mirror on port 8000');
+        });
 
         grunt.registerTask('default', [
             'bgShell:killAll',
@@ -295,6 +297,7 @@
             'bgShell:startMirrorApp',
             'bgShell:startKarma',
             'bgShell:startApp',
+            'outputPorts',
             'watch'
         ]);
 
