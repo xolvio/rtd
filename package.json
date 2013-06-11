@@ -38,9 +38,9 @@
         "grunt-istanbul": "~0.2.1",
         "grunt-zip": "~0.9.0",
         "freeport": "1.0.x",
-        "request": "2.9.x",
+        "request": "2.21.x",
         "hash_file": "0.0.x",
-        "request": "2.21.x"
+        "growl": "~1.7.0"
     },
     "bundledDependencies": [],
     "license": "MIT",

@@ -3,7 +3,8 @@
 
     var http = require('http'),
         fs = require('fs'),
-        projectBasePath = __dirname + '/../..';
+        projectBasePath = __dirname + '/../..',
+        growl = require('growl');
 
     function getLatestCoverageObject() {
         var coverageDir = projectBasePath + '/build/reports/coverage';
@@ -126,6 +127,12 @@
         return settingsPath;
     }
 
+    function rtdGrowl(opt) {
+        growl(opt.name, {
+            title: opt.message
+        });
+    }
+
     module.exports = function (grunt) {
 
         var runCmd = getRunCmd(grunt);
@@ -167,7 +174,23 @@
                     bg: true,
                     stdout: true,
                     stderr: true,
-                    fail: true
+                    fail: true,
+                    done: function (err, stdout, stderr) {
+                        if (err) {
+                            var message;
+                            // Horrible mechanism, but done doesn't seem to work inside tasks
+                            if (stdout.toLowerCase().indexOf('unit') !== -1) {
+                                message = 'Unit Tests Failed';
+                            } else if (stdout.toLowerCase().indexOf('acceptance') !== -1) {
+                                message = 'Acceptance Tests Failed';
+                            } else if (stdout.toLowerCase().indexOf('coverage') !== -1) {
+                                message = 'Coverage Checks Failed';
+                            } else {
+                                return;
+                            }
+                            rtdGrowl({name: 'Check the console for more information', message: message});
+                        }
+                    }
                 },
                 startGhostDriver: {
                     cmd: 'phantomjs --webdriver=4444 > /dev/null 2>&1;'
@@ -188,7 +211,7 @@
                         "kill `ps -ef|grep -i selenium | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i karma    | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i phantomjs| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
-                        "rm <%= basePath %>/build/reports/coverage/*.json;",
+                        "if `test -d <%= basePath %>/build/reports/coverage`; then rm -rf <%= basePath %>/build/reports/coverage; fi;",
                     fail: false,
                     bg: false,
                     stdout: false,
@@ -258,6 +281,12 @@
 
         grunt.registerTask('chmod', 'chmod', function () {
             fs.chmodSync(projectBasePath + '/test/rtd/lib/bin/chromedriver', '755');
+        });
+
+        ['warn', 'fatal'].forEach(function (level) {
+            grunt.util.hooker.hook(grunt.fail, level, function (opt) {
+                rtdGrowl(opt);
+            });
         });
 
         grunt.registerTask('postLatestUnitCoverage', 'postLatestUnitCoverage', function () {
