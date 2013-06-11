@@ -4,7 +4,8 @@
     var http = require('http'),
         fs = require('fs'),
         projectBasePath = __dirname + '/../..',
-        growl = require('growl');
+        growl = require('growl'),
+        libnotify = require('libnotify');
 
     function getLatestCoverageObject() {
         var coverageDir = projectBasePath + '/build/reports/coverage';
@@ -129,6 +130,9 @@
 
     function rtdGrowl(opt) {
         growl(opt.name, {
+            title: opt.message
+        });
+        libnotify.notify(opt.name, {
             title: opt.message
         });
     }
