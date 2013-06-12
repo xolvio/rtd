@@ -40,7 +40,8 @@
         "freeport": "1.0.x",
         "request": "2.21.x",
         "hash_file": "0.0.x",
-        "growl": "~1.7.0"
+        "growl": "~1.7.0",
+        "libnotify": "~1.0.4"
     },
     "bundledDependencies": [],
     "license": "MIT",
