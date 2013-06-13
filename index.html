@@ -67,8 +67,10 @@
 
         <hr>
         <p>Ensure you have <a href="http://nodejs.org/download/">node</a> and <a href="http://meteor.com">Meteor</a> and
-            that these dependencies globally installed (you may need to run this as sudo, depending on how you're setup)
+            that these dependencies globally installed (you may need to run this as sudo, depending on how you're setup).
         </p>
+
+        <p><b>NOTE: Due to a <a href="https://github.com/karma-runner/karma/issues/558#issuecomment-18707232">bug in SocketIO</a>, Karma doesn't work with the latest version of Node and therefore unit tests will fail. Downgrading tpo v0.10.5 works.</b></p>
 
         <div class="highlight"><pre><span class="nv">$ </span>npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node istanbul
 </pre>
