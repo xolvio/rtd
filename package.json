@@ -27,7 +27,7 @@
         "testing"
     ],
     "dependencies": {
-        "selenium-webdriver": "2.31.x"
+        "selenium-webdriver": "2.33.x"
     },
     "analyze": false,
     "devDependencies": {
