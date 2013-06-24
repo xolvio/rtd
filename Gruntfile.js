@@ -1,7 +1,8 @@
 (function () {
     "use strict";
 
-    var http = require('http'),
+    var DEBUG = false,
+        http = require('http'),
         fs = require('fs'),
         projectBasePath = __dirname + '/../..',
         growl = require('growl'),
@@ -75,7 +76,6 @@
         if (settingsPath) {
             runCmd += ' --settings ' + settingsPath;
         }
-        //console.log('resolved meteor run command to [' + runCmd + ']');
         return runCmd;
     }
 
@@ -143,7 +143,9 @@
 
         // TODO make this only happen if in verbose/debug mode
         grunt.log.header = function () {
-            //console.log('**** HEADER ****', arguments);
+            if (DEBUG) {
+                console.log('*** HEADER ***', arguments);
+            }
         };
         grunt.log.ok = function () {
         };
@@ -197,14 +199,14 @@
                     }
                 },
                 startGhostDriver: {
-                    cmd: 'phantomjs --webdriver=4444 > /dev/null 2>&1;'
+                    cmd: 'phantomjs --webdriver=4444' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
                         'karma start;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**" > /dev/null 2>&1;',
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (DEBUG ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -230,11 +232,11 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000 > /dev/null;'
+                        runCmd + ' --port 3000' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 startMirrorApp: {
                     cmd: 'cd <%= basePath %>/test/rtd/mirror_app;' +
-                        runCmd + ' --port 8000  > /dev/null;'
+                        runCmd + ' --port 8000' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ mirror_app;' +
@@ -248,7 +250,7 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run > /dev/null 2>&1;',
+                        'karma run' + (DEBUG ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
