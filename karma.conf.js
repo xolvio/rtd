@@ -13,6 +13,9 @@ files = [
     // they set mocks ahead of time for the units so they have to be loaded first
     'test/unit/**/*.js',
 
+    // Models have to load next as they're auto-stubbed by RTD
+    'app/models/**/*.js',
+
     // simulate loading order of meteor folder structure
     'app/lib/**/*.js',
     'app/client/lib/**/*.js',
