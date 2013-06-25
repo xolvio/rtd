@@ -1,14 +1,16 @@
 (function () {
     "use strict";
 
-    var DEBUG = false,
-        PROJECT_BASE_PATH = __dirname + '/../..',
+    var PROJECT_BASE_PATH = __dirname + '/../..',
         DEFAULT_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd/karma.conf.js',
         CUSTOM_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/karma.conf.js',
+        DEFAULT_RTD_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd/rtd.conf.js',
+        CUSTOM_RTD_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd.conf.js',
         http = require('http'),
         fs = require('fs'),
         growl = require('growl'),
-        libnotify = require('libnotify');
+        libnotify = require('libnotify'),
+        rtdConf = require(fs.existsSync(CUSTOM_RTD_CONFIG_FILE) ? CUSTOM_RTD_CONFIG_FILE : DEFAULT_RTD_CONFIG_FILE);
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -145,7 +147,7 @@
 
         // TODO make this only happen if in verbose/debug mode
         grunt.log.header = function () {
-            if (DEBUG) {
+            if (rtdConf.DEBUG) {
                 console.log('*** HEADER ***', arguments);
             }
         };
@@ -168,15 +170,7 @@
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
-                tasks: [
-                    'bgShell:karmaRun',
-                    'bgShell:synchronizeMirrorApp',
-                    'bgShell:instrumentCode',
-                    'bgShell:runTests',
-                    'postLatestUnitCoverage',
-                    'bgShell:killReports',
-                    'bgShell:runCoverageCheck'
-                ]
+                tasks: rtdConf.watchTasks
             },
             bgShell: {
                 _defaults: {
@@ -202,14 +196,14 @@
                     }
                 },
                 startGhostDriver: {
-                    cmd: 'phantomjs --webdriver=4444' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
+                    cmd: 'phantomjs --webdriver=4444' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (DEBUG ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -235,11 +229,11 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
+                        runCmd + ' --port 3000' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 startMirrorApp: {
                     cmd: 'cd <%= basePath %>/test/rtd/mirror_app;' +
-                        runCmd + ' --port 8000' + (DEBUG ? ';' : ' > /dev/null 2>&1;')
+                        runCmd + ' --port 8000' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
                 },
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ mirror_app;' +
@@ -253,7 +247,7 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run' + (DEBUG ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
@@ -327,17 +321,7 @@
             console.log('Launching Mirror on port 8000');
         });
 
-        grunt.registerTask('default', [
-            'bgShell:killAll',
-            'downloadAndOrStartSelenium',
-            'bgShell:synchronizeMirrorApp',
-            'bgShell:instrumentCode',
-            'bgShell:startMirrorApp',
-            'bgShell:startKarma',
-            'bgShell:startApp',
-            'outputPorts',
-            'watch'
-        ]);
+        grunt.registerTask('default', rtdConf.startupTasks);
 
     };
 
