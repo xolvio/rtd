@@ -261,7 +261,6 @@
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'echo "<%= coverageThresholds %>";' +
                         'jasmine-node --noStack <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
