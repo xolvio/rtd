@@ -2,14 +2,16 @@
     "use strict";
 
     var DEBUG = false,
+        PROJECT_BASE_PATH = __dirname + '/../..',
+        DEFAULT_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd/karma.conf.js',
+        CUSTOM_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/karma.conf.js',
         http = require('http'),
         fs = require('fs'),
-        projectBasePath = __dirname + '/../..',
         growl = require('growl'),
         libnotify = require('libnotify');
 
     function getLatestCoverageObject() {
-        var coverageDir = projectBasePath + '/build/reports/coverage';
+        var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
 
         if (!fs.existsSync(coverageDir)) {
             return null;
@@ -40,7 +42,7 @@
 
         var find = './app';
         var re = new RegExp(find, 'g');
-        data = data.replace(re, projectBasePath.substring(0, projectBasePath.indexOf('/test/rtd')) + '/app');
+        data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
 
         var options = {
             hostname: host,
@@ -70,7 +72,7 @@
     }
 
     function getRunCmd(grunt) {
-        var runCmd = fs.existsSync(projectBasePath + '/app/smart.json') ? 'mrt' : 'meteor run',
+        var runCmd = fs.existsSync(PROJECT_BASE_PATH + '/app/smart.json') ? 'mrt' : 'meteor run',
             settingsPath = getSettingsPath(grunt);
 
         if (settingsPath) {
@@ -102,7 +104,7 @@
             relativeToProjectBase;
 
         viaOption = grunt.option('settingsPath');
-        settingsPath = viaOption || (projectBasePath + '/app/settings.json');
+        settingsPath = viaOption || (PROJECT_BASE_PATH + '/app/settings.json');
         fileExists = fs.existsSync(settingsPath);
 
         if (viaOption && !fileExists) {
@@ -113,11 +115,11 @@
             return null;
         }
 
-        relativeToProjectBase = (0 === settingsPath.indexOf(projectBasePath));
+        relativeToProjectBase = (0 === settingsPath.indexOf(PROJECT_BASE_PATH));
         if (relativeToProjectBase) {
 
             // ex. ../../app/settings.json
-            settingsPath = settingsPath.substring(projectBasePath.length);
+            settingsPath = settingsPath.substring(PROJECT_BASE_PATH.length);
 
             if (0 === settingsPath.indexOf('/app/')) {
                 // strip left-over relative part
@@ -151,7 +153,8 @@
         };
 
         grunt.initConfig({
-            basePath: projectBasePath,
+            basePath: PROJECT_BASE_PATH,
+            karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
             chromeDriverOs: 'mac32', // You can also do linux_64
             chromeDriverVersion: '0.8',
             chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673',
@@ -203,7 +206,7 @@
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
-                        'karma start;'
+                        'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
                     cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (DEBUG ? ';' : ' > /dev/null 2>&1;'),
@@ -286,7 +289,7 @@
         grunt.loadNpmTasks('grunt-zip');
 
         grunt.registerTask('chmod', 'chmod', function () {
-            fs.chmodSync(projectBasePath + '/test/rtd/lib/bin/chromedriver', '755');
+            fs.chmodSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver', '755');
         });
 
         ['warn', 'fatal'].forEach(function (level) {
@@ -302,8 +305,8 @@
 
         grunt.registerTask('downloadAndOrStartSelenium', 'downloadAndOrStartSelenium', function () {
             var done = this.async();
-            require(projectBasePath + '/test/rtd/lib/selenium-launcher.js')(function (/*er, selenium*/) {
-                if (!fs.existsSync(projectBasePath + '/test/rtd/lib/bin/chromedriver')) {
+            require(PROJECT_BASE_PATH + '/test/rtd/lib/selenium-launcher.js')(function (/*er, selenium*/) {
+                if (!fs.existsSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver')) {
                     grunt.task.run('unzip', 'chmod');
                 }
                 done();
