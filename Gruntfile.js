@@ -145,7 +145,6 @@
 
         var runCmd = getRunCmd(grunt);
 
-        // TODO make this only happen if in verbose/debug mode
         grunt.log.header = function () {
             if (rtdConf.DEBUG) {
                 console.log('*** HEADER ***', arguments);
@@ -162,6 +161,7 @@
             chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673',
             seleniumServeVersion: '2.32.0',
             seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a',
+            coverageThresholds: JSON.stringify(rtdConf.coverageThresholds),
             watch: {
                 files: [
                     '<%= basePath %>/test/unit/**/*.js',
@@ -261,7 +261,8 @@
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --noStack <%= basePath %>/test/rtd/lib;',
+                        'echo "<%= coverageThresholds %>";' +
+                        'jasmine-node --noStack <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },

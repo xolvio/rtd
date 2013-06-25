@@ -1,3 +1,7 @@
+// *********************************************************************************************************************
+// IF YOU WANT TO CUSTOMIZE ANYTHING HERE, COPY THIS FILE TO YOUR /test DIRECTORY AND RTD WILL USE THAT FILE INSTEAD
+// *********************************************************************************************************************
+
 // base path, that will be used to resolve files and exclude
 basePath = '../..';
 
