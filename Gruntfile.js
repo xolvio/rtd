@@ -156,6 +156,8 @@
             basePath: PROJECT_BASE_PATH,
             karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
             coverageThresholds: JSON.stringify(rtdConf.coverageThresholds),
+            chromeDriverOs: rtdConf.selenium.chromeDriverOs,
+            chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
             watch: {
                 files: [
                     '<%= basePath %>/test/unit/**/*.js',
