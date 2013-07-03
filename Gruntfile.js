@@ -145,22 +145,16 @@
 
         var runCmd = getRunCmd(grunt);
 
-        grunt.log.header = function () {
-            if (rtdConf.DEBUG) {
-                console.log('*** HEADER ***', arguments);
-            }
-        };
-        grunt.log.ok = function () {
-        };
+        if (!rtdConf.output.debug) {
+            grunt.log.ok = function () {
+            };
+            grunt.log.header = function () {
+            };
+        }
 
         grunt.initConfig({
             basePath: PROJECT_BASE_PATH,
             karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
-            chromeDriverOs: 'mac32', // You can also do linux_64
-            chromeDriverVersion: '0.8',
-            chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673',
-            seleniumServeVersion: '2.32.0',
-            seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a',
             coverageThresholds: JSON.stringify(rtdConf.coverageThresholds),
             watch: {
                 files: [
@@ -195,19 +189,17 @@
                         }
                     }
                 },
-                startGhostDriver: {
-                    cmd: 'phantomjs --webdriver=4444' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
-                },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/test/rtd/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
-                    cmd: "rm -rf <%= basePath %>/test/rtd/mirror_app;" +
+                    cmd: "rm -rf <%= basePath %>/build/mirror_app;" +
+                        "mkdir -p <%= basePath %>/build/mirror_app;" +
                         "kill `ps -ef|grep -i meteor   | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i mrt      | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i mongod   | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
@@ -229,25 +221,23 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
+                        runCmd + ' --port 3000' + (rtdConf.output.appOutput || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 startMirrorApp: {
-                    cmd: 'cd <%= basePath %>/test/rtd/mirror_app;' +
-                        runCmd + ' --port 8000' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;')
+                    cmd: 'cd <%= basePath %>/build/mirror_app;' +
+                        runCmd + ' --port 8000' + (rtdConf.output.mirrorOutput || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 synchronizeMirrorApp: {
-                    cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ mirror_app;' +
-                        'echo >> mirror_app/.meteor/packages; echo http >> mirror_app/.meteor/packages;' +
-                        'mkdir -p mirror_app/packages;' +
-                        'cd mirror_app/packages;' +
-                        'ln -s ../../lib/istanbul-middleware-port .;' +
-                        'cd ../..;' +
-                        'cp ../acceptance/fixtures/* mirror_app/server;',
+                    cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ <%= basePath %>/build/mirror_app;' +
+                        'mkdir -p <%= basePath %>/build/mirror_app/packages;' +
+                        'cd <%= basePath %>/build/mirror_app/packages;' +
+                        'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
+                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
                     bg: false
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run' + (rtdConf.DEBUG ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run' + (rtdConf.output.karma || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
@@ -266,7 +256,7 @@
                     fail: true
                 },
                 touchMirrorApp: {
-                    cmd: 'touch mirror_app/.meteor/packages;',
+                    cmd: 'touch <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false,
                     fail: false
                 }
@@ -305,11 +295,11 @@
                 }
                 done();
             }, {
-                chromeDriverOs: grunt.config.get('chromeDriverOs'),
-                chromeDriverVersion: grunt.config.get('chromeDriverVersion'),
-                chromeDriverSha: grunt.config.get('chromeDriverSha'),
-                seleniumServerVersion: grunt.config.get('seleniumServeVersion'),
-                seleniumServerSha: grunt.config.get('seleniumServeSha')
+                chromeDriverOs: rtdConf.selenium.chromeDriverOs,
+                chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
+                chromeDriverSha: rtdConf.selenium.chromeDriverSha,
+                seleniumServerVersion: rtdConf.selenium.seleniumServeVersion,
+                seleniumServerSha: rtdConf.selenium.seleniumServeSha
             });
         });
 

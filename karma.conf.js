@@ -12,18 +12,24 @@ files = [
 
     // stubs come first so they can be available when all the units need them
     'test/rtd/lib/*-stubs.js',
+    'test/rtd/lib/*-stubs.coffee',
 
     // the reason we load unit tests next is because they don't depend on the app. On the contrary,
     // they set mocks ahead of time for the units so they have to be loaded first
     'test/unit/**/*.js',
+    'test/unit/**/*.coffee',
 
     // Models have to load next as they're auto-stubbed by RTD
     'app/models/**/*.js',
+    'app/models/**/*.coffee',
 
     // simulate loading order of meteor folder structure
     'app/lib/**/*.js',
+    'app/lib/**/*.coffee',
     'app/client/lib/**/*.js',
+    'app/client/lib/**/*.coffee',
     'app/server/lib/**/*.js',
+    'app/server/lib/**/*.coffee',
 
     // now all the dependencies have been sorted, the app code can be loaded
     'app/**/*.js'
@@ -41,7 +47,8 @@ exclude = [
 ];
 
 preprocessors = {
-    '**/app/**/*.js': 'coverage'
+    '**/app/**/*.js': 'coverage',
+    '**/*.coffee': 'coffee'
 };
 
 coverageReporter = {
