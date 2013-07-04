@@ -203,6 +203,7 @@
             basePath: PROJECT_BASE_PATH,
             karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
             coverageThresholds: JSON.stringify(rtdConf.options.coverage.thresholds),
+            chromeDriverName: rtdConf.selenium.chromeDriverName,
             chromeDriverOs: rtdConf.selenium.chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
             debugMode: debug,
@@ -313,7 +314,7 @@
             },
             'unzip': {
                 chromeDriver: {
-                    src: '<%= basePath %>/test/rtd/lib/bin/chromedriver2_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
+                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
                     dest: '<%= basePath %>/test/rtd/lib/bin/'
                 }
             }
@@ -345,6 +346,7 @@
                 }
                 done();
             }, {
+                chromeDriverName: rtdConf.selenium.chromeDriverName,
                 chromeDriverOs: rtdConf.selenium.chromeDriverOs,
                 chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
                 chromeDriverSha: rtdConf.selenium.chromeDriverSha,

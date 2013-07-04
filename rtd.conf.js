@@ -24,9 +24,19 @@ module.exports = {
     },
     selenium: {
         // You can set specific versions of selenium-server / chromedriver to use here
-        chromeDriverOs: 'mac32', // "linux_64" for linux systems
+
+        // OSX
+        chromeDriverName: 'chromedriver2',
+        chromeDriverOs: 'mac32',
         chromeDriverVersion: '0.8',
         chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673',
+
+        // LINUX
+//        chromeDriverName: 'chromedriver',
+//        chromeDriverOs: 'linux64',
+//        chromeDriverVersion: '2.0',
+//        chromeDriverSha: 'd6c78f1bd48ab74d3c66e779ee2a5b70fc2937fb',
+
         seleniumServeVersion: '2.32.0',
         seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a'
     }
