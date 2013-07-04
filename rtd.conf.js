@@ -3,39 +3,27 @@
 // *********************************************************************************************************************
 
 module.exports = {
+    // RTD reduces the noise by swallowing most outputs. Here you can control this
     output: {
-        debug: false,
-        appOutput: false,
-        mirrorOutput: false,
-        karma: false
+        debug: false, // enables all outputs. This is also switched on if you run grunt --debug
+        appOutput: false, // this shows the output from the 'meteor run' command
+        mirrorOutput: false, // this shows the output from the 'meteor run' command on the mirror app
+        karma: false // shows Karma's output
     },
-    startupTasks: [
-        'bgShell:killAll',
-        'downloadAndOrStartSelenium',
-        'bgShell:synchronizeMirrorApp',
-        'bgShell:instrumentCode',
-        'bgShell:startMirrorApp',
-        'bgShell:startKarma',
-        'bgShell:startApp',
-        'outputPorts',
-        'watch'
-    ],
-    watchTasks: [
-        'bgShell:karmaRun',
-        'bgShell:synchronizeMirrorApp',
-        'bgShell:instrumentCode',
-        'bgShell:runTests',
-        'postLatestUnitCoverage',
-        'bgShell:killReports',
-        'bgShell:runCoverageCheck'
-    ],
-    coverageThresholds: {
-        'statements': 100,
-        'branches': 100,
-        'functions': 100,
-        'lines': 100
+    options: {
+        coverage: {
+            // Coverage checks run after all unit and acceptance tests run. You can disable here or set the thresholds
+            enabled: true,
+            thresholds: {
+                'statements': 100,
+                'branches': 100,
+                'functions': 100,
+                'lines': 100
+            }
+        }
     },
     selenium: {
+        // You can set specific versions of selenium-server / chromedriver to use here
         chromeDriverOs: 'mac32', // "linux_64" for linux systems
         chromeDriverVersion: '0.8',
         chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673',

@@ -12,6 +12,42 @@
         libnotify = require('libnotify'),
         rtdConf = require(fs.existsSync(CUSTOM_RTD_CONFIG_FILE) ? CUSTOM_RTD_CONFIG_FILE : DEFAULT_RTD_CONFIG_FILE);
 
+    var startupTaskWithCoverage = [
+            'bgShell:killAll',
+            'downloadAndOrStartSelenium',
+            'bgShell:synchronizeMirrorApp',
+            'bgShell:instrumentCode',
+            'bgShell:startMirrorApp',
+            'bgShell:startKarma',
+            'bgShell:startApp',
+            'outputPorts',
+            'watch'
+        ], watchTasksWithCoverage = [
+            'bgShell:karmaRun',
+            'bgShell:synchronizeMirrorApp',
+            'bgShell:instrumentCode',
+            'bgShell:runTests',
+            'postLatestUnitCoverage',
+            'bgShell:killReports',
+            'bgShell:runCoverageCheck'
+        ],
+        startupTaskNoCoverage = [
+            'bgShell:killAll',
+            'downloadAndOrStartSelenium',
+            'bgShell:synchronizeMirrorApp',
+            'bgShell:startMirrorApp',
+            'bgShell:startKarma',
+            'bgShell:startApp',
+            'outputPorts',
+            'watch'
+        ], watchTasksWithNoCoverage = [
+            'bgShell:karmaRun',
+            'bgShell:synchronizeMirrorApp',
+            'bgShell:runTests'
+        ],
+        startupTasks = rtdConf.options.coverage.enabled ? startupTaskWithCoverage : startupTaskNoCoverage,
+        watchTasks = rtdConf.options.coverage.enabled ? watchTasksWithCoverage : watchTasksWithNoCoverage;
+
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
 
@@ -138,14 +174,25 @@
         });
         libnotify.notify(opt.name, {
             title: opt.message
-        });
+        }, null);
     }
+
+    var getGruntDebugMode = function (grunt) {
+        var gruntFlags = grunt.option.flags();
+        for (var i = 0; i < gruntFlags.length; gruntFlags += 1) {
+            if (gruntFlags[i].indexOf('--debug') !== -1) {
+                return true;
+            }
+        }
+        return false;
+    };
 
     module.exports = function (grunt) {
 
-        var runCmd = getRunCmd(grunt);
+        var runCmd = getRunCmd(grunt),
+            debug = getGruntDebugMode(grunt) || rtdConf.output.debug;
 
-        if (!rtdConf.output.debug) {
+        if (!debug) {
             grunt.log.ok = function () {
             };
             grunt.log.header = function () {
@@ -155,9 +202,10 @@
         grunt.initConfig({
             basePath: PROJECT_BASE_PATH,
             karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
-            coverageThresholds: JSON.stringify(rtdConf.coverageThresholds),
+            coverageThresholds: JSON.stringify(rtdConf.options.coverage.thresholds),
             chromeDriverOs: rtdConf.selenium.chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
+            debugMode: debug,
             watch: {
                 files: [
                     '<%= basePath %>/test/unit/**/*.js',
@@ -166,7 +214,7 @@
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
-                tasks: rtdConf.watchTasks
+                tasks: watchTasks
             },
             bgShell: {
                 _defaults: {
@@ -174,7 +222,7 @@
                     stdout: true,
                     stderr: true,
                     fail: true,
-                    done: function (err, stdout, stderr) {
+                    done: function (err, stdout) {
                         if (err) {
                             var message;
                             // Horrible mechanism, but done doesn't seem to work inside tasks
@@ -196,7 +244,7 @@
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -223,11 +271,11 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000' + (rtdConf.output.appOutput || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;')
+                        runCmd + ' --port 3000' + (rtdConf.output.appOutput || debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 startMirrorApp: {
                     cmd: 'cd <%= basePath %>/build/mirror_app;' +
-                        runCmd + ' --port 8000' + (rtdConf.output.mirrorOutput || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;')
+                        runCmd + ' --port 8000' + (rtdConf.output.mirrorOutput || debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ <%= basePath %>/build/mirror_app;' +
@@ -239,7 +287,7 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run' + (rtdConf.output.karma || rtdConf.output.debug ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
@@ -313,7 +361,7 @@
             console.log('Launching Mirror on port 8000');
         });
 
-        grunt.registerTask('default', rtdConf.startupTasks);
+        grunt.registerTask('default', startupTasks);
 
     };
 

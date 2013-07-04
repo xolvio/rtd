@@ -1,3 +1,11 @@
-npm install
-grunt
+#!/bin/bash
 
+ulimit -n 4096
+
+if [ "$1" = "--debug" ]; then
+    npm install;
+    grunt --debug;
+else
+    npm --silent install;
+    grunt;
+fi
