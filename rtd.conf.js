@@ -20,7 +20,8 @@ module.exports = {
                 'functions': 100,
                 'lines': 100
             }
-        }
+        },
+        killMongo: false // If your dev environment has a stand-alone mongo service, you should disabled this
     },
     selenium: {
         // You can set specific versions of selenium-server / chromedriver to use here
