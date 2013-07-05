@@ -192,6 +192,7 @@
         for (var i = 0; i < excludesArray.length; i += 1) {
             build += ' -x "' + excludesArray[i] + '"';
         }
+        return build;
     };
 
     module.exports = function (grunt) {
