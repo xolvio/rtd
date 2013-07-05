@@ -14,6 +14,7 @@ module.exports = {
         coverage: {
             // Coverage checks run after all unit and acceptance tests run. You can disable here or set the thresholds
             enabled: true,
+            includeUnitCoverage: false,
             thresholds: {
                 'statements': 100,
                 'branches': 100,

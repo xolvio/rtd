@@ -12,41 +12,41 @@
         libnotify = require('libnotify'),
         rtdConf = require(fs.existsSync(CUSTOM_RTD_CONFIG_FILE) ? CUSTOM_RTD_CONFIG_FILE : DEFAULT_RTD_CONFIG_FILE);
 
-    var startupTaskWithCoverage = [
-            'bgShell:killAll',
-            'downloadAndOrStartSelenium',
-            'bgShell:synchronizeMirrorApp',
-            'bgShell:instrumentCode',
-            'bgShell:startMirrorApp',
-            'bgShell:startKarma',
-            'bgShell:startApp',
-            'outputPorts',
-            'watch'
-        ], watchTasksWithCoverage = [
-            'bgShell:karmaRun',
-            'bgShell:synchronizeMirrorApp',
-            'bgShell:instrumentCode',
-            'bgShell:runTests',
-            'postLatestUnitCoverage',
-            'bgShell:killReports',
-            'bgShell:runCoverageCheck'
-        ],
-        startupTaskNoCoverage = [
-            'bgShell:killAll',
-            'downloadAndOrStartSelenium',
-            'bgShell:synchronizeMirrorApp',
-            'bgShell:startMirrorApp',
-            'bgShell:startKarma',
-            'bgShell:startApp',
-            'outputPorts',
-            'watch'
-        ], watchTasksWithNoCoverage = [
-            'bgShell:karmaRun',
-            'bgShell:synchronizeMirrorApp',
-            'bgShell:runTests'
-        ],
-        startupTasks = rtdConf.options.coverage.enabled ? startupTaskWithCoverage : startupTaskNoCoverage,
-        watchTasks = rtdConf.options.coverage.enabled ? watchTasksWithCoverage : watchTasksWithNoCoverage;
+    var constructStartupTasks = function () {
+        var tasks = [];
+        tasks.push('bgShell:killAll');
+        tasks.push('downloadAndOrStartSelenium');
+        tasks.push('bgShell:synchronizeMirrorApp');
+        if (rtdConf.options.coverage.enabled) {
+            tasks.push('bgShell:instrumentCode');
+        }
+        tasks.push('bgShell:startMirrorApp');
+        tasks.push('bgShell:startKarma');
+        tasks.push('bgShell:startApp');
+        tasks.push('outputPorts');
+        tasks.push('watch');
+        return tasks;
+    };
+
+    var constructWatchTasks = function () {
+        var tasks = [];
+        tasks.push('bgShell:karmaRun');
+        tasks.push('bgShell:synchronizeMirrorApp');
+        tasks.push('bgShell:instrumentCode');
+        tasks.push('bgShell:runTests');
+        if (rtdConf.options.coverage.enabled) {
+            if (rtdConf.options.coverage.includeUnitCoverage) {
+                tasks.push('postLatestUnitCoverage');
+            }
+            tasks.push('bgShell:killReports');
+            tasks.push('bgShell:runCoverageCheck');
+        }
+        return tasks;
+    };
+
+    var startupTasks = constructStartupTasks(),
+        watchTasks = constructWatchTasks();
+
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -345,6 +345,11 @@
 
         grunt.registerTask('postLatestUnitCoverage', 'postLatestUnitCoverage', function () {
             var done = this.async();
+            if (getLatestCoverageObject() === null) {
+                console.log('No coverage reports available from unit tests');
+                return;
+            }
+            console.log(getLatestCoverageObject());
             postJson('localhost', 8000, '/coverage/client', getLatestCoverageObject(), done);
         });
 
