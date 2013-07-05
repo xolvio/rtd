@@ -35,71 +35,74 @@
 
 <!-- MAIN CONTENT -->
 <div id="main_content_wrap" class="outer">
-    <section id="main_content" class="inner">
-        <h3>
-            <a name="what-is-rtd" class="anchor" href="#what-is-rtd"><span class="octicon octicon-link"></span></a>What
-            is RTD</h3>
+<section id="main_content" class="inner">
+<h3>
+    <a name="what-is-rtd" class="anchor" href="#what-is-rtd"><span class="octicon octicon-link"></span></a>What
+    is RTD</h3>
 
-        <hr>
-        <p>RTD is a test runner for Meteor. It's exactly like having a continuous integration server on your machine.
-            Every time you save a file RTD will:</p>
+<hr>
+<p>RTD is a test runner for Meteor. It's exactly like having a continuous integration server on your machine.
+    Every time you save a file RTD will:</p>
 
-        <ul>
-            <li>Run all your unit tests in <strong>any browser</strong> [default: PhantomJS]</li>
-            <li>Run all your acceptance tests in <strong>any browser</strong> [default: Chrome]</li>
-            <li>Combines test coverage from <strong>unit and acceptance</strong> runs</li>
-            <li>Checks the coverage thresholds and provides a pretty report [default: 100%]</li>
-        </ul>
-        <p>We have focused our efforts on making RTD as seamless and fast as possible. It will run in the background
-            without bothering your workflow and you simply get pass/fail as you develop. </p>
+<ul>
+    <li>Run all your unit tests in <strong>any browser</strong> [default: PhantomJS]</li>
+    <li>Run all your acceptance tests in <strong>any browser</strong> [default: Chrome]</li>
+    <li>Combines test coverage from <strong>unit and acceptance</strong> runs</li>
+    <li>Checks the coverage thresholds and provides a <strong>pretty report</strong> [default: 100%]</li>
+</ul>
+<p>We have focused our efforts on making RTD as seamless and fast as possible. It will run in the background
+    without bothering your workflow and you simply get pass/fail as you develop. </p>
 
-        <div style="text-align: center;">
-            <iframe width="640" height="480" src="http://www.youtube.com/embed/ESVRDEY-QSk" frameborder="0"
-                    allowfullscreen></iframe>
-        </div>
+<div style="text-align: center;">
+    <iframe width="640" height="480" src="http://www.youtube.com/embed/ESVRDEY-QSk" frameborder="0"
+            allowfullscreen></iframe>
+</div>
 
-        <p>RTD is highly customizable. You can test using any browser, including mobile and you can choose your testing
-            framework like Jasmine (default), Mocha etc.</p>
+<p>RTD is highly customizable. You can test using any browser, including mobile and you can choose your testing
+    framework like Jasmine (default), Mocha etc.</p>
 
-        <h3>
-            <a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Instructions
-        </h3>
+<h3>
+    <a name="instructions" class="anchor" href="#instructions"><span class="octicon octicon-link"></span></a>Instructions
+</h3>
 
-        <hr>
-        <p>Ensure you have <a href="http://nodejs.org/download/">node</a> and <a href="http://meteor.com">Meteor</a> and
-            that these dependencies globally installed (you may need to run this as sudo, depending on how you're setup).
-        </p>
+<hr>
+<p>Ensure you have <a href="http://nodejs.org/download/">node</a> and <a href="http://meteor.com">Meteor</a> and
+    that these dependencies globally installed (you may need to run this as sudo, depending on how you're
+    setup).
+</p>
 
-        <p><b>NOTE: Due to a <a href="https://github.com/karma-runner/karma/issues/558#issuecomment-18707232">bug in SocketIO</a>, Karma doesn't work with the latest version of Node and therefore unit tests will fail. Downgrading to v0.10.5 works.</b></p>
+<p><b>NOTE: Due to a <a href="https://github.com/karma-runner/karma/issues/558#issuecomment-18707232">bug in
+    SocketIO</a>, Karma doesn't work with the latest version of Node and therefore unit tests will fail.
+    Downgrading to v0.10.5 works.</b></p>
 
-        <div class="highlight"><pre><span class="nv">$ </span>npm i -g karma phantomjs selenium-webdriver grunt-cli jasmine-node istanbul
+<div class="highlight"><pre><span class="nv">$ </span>npm i -g karma@0.8.6 phantomjs@1.9.0-6 istanbul@0.1.39 grunt-cli selenium-webdriver jasmine-node
 </pre>
-        </div>
+</div>
 
-        <p>If you have any issues with phantomJS, you may need to <a href="https://github.com/xolvio/rtd/issues/9">do
-            this</a></p>
+<p>If you have any issues with phantomJS, you may need to <a href="https://github.com/xolvio/rtd/issues/9">do
+    this</a></p>
 
-        <p>For growl notifications, you need to install a notifier if you don't already have it:</p>
+<p>For growl notifications, you need to install a notifier if you don't already have it:</p>
 
-        <div class="highlight">
+<div class="highlight">
 <pre>MAC:
 <span class="nv">$ </span>sudo gem install terminal-notifier
 LINUX:
 <span class="nv">$ </span>sudo apt-get install libnotify-bin</pre>
-        </div>
+</div>
 
-        <p>If you get an openssl error, you should do this:</p>
+<p>If you get an openssl error, you should do this:</p>
 
-        <div class="highlight">
+<div class="highlight">
 <pre><span class="nv">$ </span>rvm implode
 <span class="nv">$ </span>bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
 <span class="nv">$ </span>rvm autolibs enable
 <span class="nv">$ </span>rvm reinstall all --force
 </pre>
-        </div>
+</div>
 
-        <p>Next you need to move your meteor code into an app directory the structure of your application as
-            follows:</p>
+<p>Next you need to move your meteor code into an app directory the structure of your application as
+    follows:</p>
 
 <pre><code>├── &lt;project root&gt;
     │ ├── .git
@@ -108,17 +111,17 @@ LINUX:
     │ │ └── &lt;your meteor code here&gt;
 </code></pre>
 
-        <p>RTD will live under the test directory. You can use a git sub-module as follows: (advised method as you'll
-            get updates to RTD as we do them)</p>
+<p>RTD will live under the test directory. You can use a git sub-module as follows: (advised method as you'll
+    get updates to RTD as we do them)</p>
 
-        <div class="highlight">
+<div class="highlight">
 <pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;
 <span class="nv">$ </span>mkdir -p ./test/acceptance/fixtures; mkdir ./test/unit; touch ./test/acceptance/fixtures/empty.js;
 <span class="nv">$ </span>git submodule add git@github.com:xolvio/rtd.git ./test/rtd; <span class="nb">cd test</span>/rtd; npm install;
 </pre>
-        </div>
+</div>
 
-        <p>Once the above runs, you should see this:</p>
+<p>Once the above runs, you should see this:</p>
 
 <pre><code>├── &lt;project root&gt;
     │ ├── .git
@@ -136,78 +139,115 @@ LINUX:
     | │ │ └── &lt;your unit tests here&gt;
 </code></pre>
 
-        <p>Now every time you start development, just run this: (the first time will take a few minutes as
-            selenium-server &amp; chromedriver are downloaded)</p>
+<p>Now every time you start development, just run this: (the first time will take a few minutes as
+    selenium-server &amp; chromedriver are downloaded)</p>
 
-        <div class="highlight">
+<div class="highlight">
 <pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;/test/rtd
-<span class="nv">$ </span>grunt
+<span class="nv">$ </span>./rtd
+or
+<span class="nv">$ </span>./rtd --debug
 </pre>
-        </div>
+</div>
 
-        <p>Enjoy using RTD</p>
+<p>Enjoy using RTD</p>
 
-        <p>To see the actual coverage report in detail, go to <a href="http://localhost:8000/coverage">http://localhost:8000/coverage</a>
-        </p>
+<p>To see the actual coverage report in detail, go to <a href="http://localhost:8000/coverage">http://localhost:8000/coverage</a>
+</p>
 
-        <h2>
-            <a name="find-out-more" class="anchor" href="#find-out-more"><span class="octicon octicon-link"></span></a>Find
-            out more</h2>
+<h2>
+    <a name="customizing" class="anchor" href="#customizing"><span class="octicon octicon-link"></span></a>Customizing
+</h2>
 
-        <ul>
-            <li><a href="http://blog.xolv.io/2013/04/unit-testing-with-meteor.html">Read our blog post on Unit-testing
-                with Meteor</a></li>
-            <li><a href="http://blog.xolv.io/2013/04/end-to-end-testing-for-web-apps-meteor.html">Read our blog post on
-                End-to-end testing with Meteor</a></li>
-            <li><a href="https://github.com/xolvio/real-time-development-with-meteor">See an example of RTD with Meteor
-                + Leaderboard sample app</a></li>
-        </ul>
-        <h3>
-            <a name="rtd-philosophy" class="anchor" href="#rtd-philosophy"><span
-                    class="octicon octicon-link"></span></a>RTD Philosophy</h3>
+<p>If you'd like to change any settings, you can do so by copying either or both of <strong>karma.conf.js</strong> and
+    <strong>rtd.conf.js</strong> from <strong>&lt;your project root&gt;/test/rtd</strong> to <strong>&lt;your project
+        root&gt;/test</strong>. RTD will use these settings file and you can also check them in as part of your project.
+    Please see the config files themselves for what the settings do.</p>
 
-        <hr>
-        <p>The ability to capture and deal with feedback is a great indicator of quality, both of working practices and
-            the end deliverable. Feedback comes in all shapes and sizes and <strong>the earlier feedback can be
-                captured, the easier and cheaper it is to deal with</strong>. </p>
+<h2>
+    <a name="find-out-more" class="anchor" href="#find-out-more"><span class="octicon octicon-link"></span></a>Find
+    out more</h2>
 
-        <p>What if we could get feedback in realtime? It's an ideal for sure, but consider the trends of Agile
-            development, lean startups, super fast test executions with file watcher triggers and so forth. You could
-            say we're not that far off from this ideal with all the magic efforts the community has put in.</p>
+<ul>
+    <li><a href="http://blog.xolv.io/2013/04/unit-testing-with-meteor.html">Read our blog post on Unit-testing
+        with Meteor</a></li>
+    <li><a href="http://blog.xolv.io/2013/04/end-to-end-testing-for-web-apps-meteor.html">Read our blog post on
+        End-to-end testing with Meteor</a></li>
+    <li><a href="https://github.com/xolvio/real-time-development-with-meteor">See an example of RTD with Meteor
+        + Leaderboard sample app</a></li>
+</ul>
+<h3>
+    <a name="rtd-philosophy" class="anchor" href="#rtd-philosophy"><span
+            class="octicon octicon-link"></span></a>RTD Philosophy</h3>
 
-        <p>From a developer's perspective, here are the key feedback areas and how they are detected:</p>
+<hr>
+<p>The ability to capture and deal with feedback is a great indicator of quality, both of working practices and
+    the end deliverable. Feedback comes in all shapes and sizes and <strong>the earlier feedback can be
+        captured, the easier and cheaper it is to deal with</strong>. </p>
 
-        <table>
-            <tr>
-                <th>Feedback</th>
-                <th>Detection mechanisms</th>
-                <th>Currently Implemented</th>
-            </tr>
-            <tr>
-                <td>Code quality</td>
-                <td>Static analysis</td>
-                <td>Test Coverage</td>
-            </tr>
-            <tr>
-                <td>Regression</td>
-                <td>Automated testing</td>
-                <td>Unit &amp; end-to-end acceptance</td>
-            </tr>
-            <tr>
-                <td>Exceptions</td>
-                <td>Logging</td>
-                <td><em>Coming Soon</em></td>
-            </tr>
-            <tr>
-                <td>Performance</td>
-                <td>Monitoring</td>
-                <td><em>Coming Soon</em></td>
-            </tr>
-        </table>
-        <p>Of course each one of those detection mechanisms needs to be implemented, and this is often missed out all
-            together in an end-to-end deployment pipeline, let alone on an individual developer's machine. RTD is the
-            toolset and wiring required to get the above-mentioned feedback locally, in realtime.</p>
-    </section>
+<p>What if we could get feedback in realtime? It's an ideal for sure, but consider the trends of Agile
+    development, lean startups, super fast test executions with file watcher triggers and so forth. You could
+    say we're not that far off from this ideal with all the magic efforts the community has put in.</p>
+
+<p>From a developer's perspective, here are the key feedback areas and how they are detected:</p>
+
+<table>
+    <tr>
+        <th>Feedback</th>
+        <th>Detection mechanisms</th>
+        <th>Currently Implemented</th>
+    </tr>
+    <tr>
+        <td>Code quality</td>
+        <td>Static analysis</td>
+        <td>Test Coverage</td>
+    </tr>
+    <tr>
+        <td>Regression</td>
+        <td>Automated testing</td>
+        <td>Unit &amp; end-to-end acceptance</td>
+    </tr>
+    <tr>
+        <td>Exceptions</td>
+        <td>Logging</td>
+        <td><em>Coming Soon</em></td>
+    </tr>
+    <tr>
+        <td>Performance</td>
+        <td>Monitoring</td>
+        <td><em>Coming Soon</em></td>
+    </tr>
+</table>
+<p>Of course each one of those detection mechanisms needs to be implemented, and this is often missed out all
+    together in an end-to-end deployment pipeline, let alone on an individual developer's machine. RTD is the
+    toolset and wiring required to get the above-mentioned feedback locally, in realtime.</p>
+
+
+<!--
+<h2>
+    <a name="faq" class="anchor" href="#faq"><span class="octicon octicon-link"></span></a>FAQ
+</h2>
+
+<ul>
+    <li style="list-style: none;">
+        <p><strong>Q: </strong></p>
+
+        <p><i>A: </i></p>
+    </li>
+    <li style="list-style: none;">
+        <p><strong>Q: </strong></p>
+
+        <p><i>A: </i></p>
+    </li>
+    <li style="list-style: none;">
+        <p><strong>Q: </strong></p>
+
+        <p><i>A: </i></p>
+    </li>
+</ul>
+-->
+
+</section>
 </div>
 
 <!-- FOOTER  -->
