@@ -5,10 +5,10 @@
 module.exports = {
     // RTD reduces the noise by swallowing most outputs. Here you can control this
     output: {
-        debug: false, // enables all outputs. This is also switched on if you run grunt --debug
-        appOutput: false, // this shows the output from the 'meteor run' command
-        mirrorOutput: false, // this shows the output from the 'meteor run' command on the mirror app
-        karma: false // shows Karma's output
+        debug: false,           // enables all outputs. This is also switched on if you run grunt --debug
+        appOutput: false,       // this shows the output from the 'meteor run' command
+        mirrorOutput: false,    // this shows the output from the 'meteor run' command on the mirror app
+        karma: false            // shows Karma's output
     },
     options: {
         coverage: {
@@ -21,8 +21,10 @@ module.exports = {
                 'lines': 100
             }
         },
+        // if you have client libraries, you'll want to exclude them from test coverage
         instrumentationExcludes: ['**/packages/**', '**/3rd/**'],
-        killMongo: false // If your dev environment has a stand-alone mongo service, you should disabled this
+        // If your dev environment has a stand-alone mongo service, you should disabled this
+        killMongo: false
     },
     selenium: {
         // You can set specific versions of selenium-server / chromedriver to use here
