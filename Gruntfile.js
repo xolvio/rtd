@@ -211,9 +211,9 @@
             basePath: PROJECT_BASE_PATH,
             karmaConfigFile: fs.existsSync(CUSTOM_KARMA_CONFIG_FILE) ? CUSTOM_KARMA_CONFIG_FILE : DEFAULT_KARMA_CONFIG_FILE,
             coverageThresholds: JSON.stringify(rtdConf.options.coverage.thresholds),
-            chromeDriverName: rtdConf.selenium.chromeDriverName,
-            chromeDriverOs: rtdConf.selenium.chromeDriverOs,
-            chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
+            chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
+            chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
+            chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
             debugMode: debug,
             watch: {
                 files: [
@@ -355,10 +355,10 @@
                 }
                 done();
             }, {
-                chromeDriverName: rtdConf.selenium.chromeDriverName,
-                chromeDriverOs: rtdConf.selenium.chromeDriverOs,
-                chromeDriverVersion: rtdConf.selenium.chromeDriverVersion,
-                chromeDriverSha: rtdConf.selenium.chromeDriverSha,
+                chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
+                chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
+                chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
+                chromeDriverSha: rtdConf.selenium[process.platform].chromeDriverSha,
                 seleniumServerVersion: rtdConf.selenium.seleniumServeVersion,
                 seleniumServerSha: rtdConf.selenium.seleniumServeSha
             });
