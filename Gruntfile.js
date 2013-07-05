@@ -283,6 +283,7 @@
                         'mkdir -p <%= basePath %>/build/mirror_app/packages;' +
                         'cd <%= basePath %>/build/mirror_app/packages;' +
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
+                        'ln -s ../../../test/rtd/lib/email-fixture .;' +
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
                     bg: false
                 },
