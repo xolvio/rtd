@@ -66,6 +66,8 @@
     "maxerr": 100,      // Maximum errors before stopping.
     "predef": [         // Extra globals.
         "require",
+        "Meteor",
+        "Email",
         "__meteor_bootstrap__",
         "console",
         "jasmine",
@@ -78,7 +80,6 @@
         "it",
         "__filename",
         "__dirname",
-        "BoardObjects",
         "waitsFor",
         "runs"
     ]
