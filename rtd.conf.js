@@ -21,6 +21,7 @@ module.exports = {
                 'lines': 100
             }
         },
+        instrumentationExcludes: ['**/packages/**', '**/3rd/**'],
         killMongo: false // If your dev environment has a stand-alone mongo service, you should disabled this
     },
     selenium: {

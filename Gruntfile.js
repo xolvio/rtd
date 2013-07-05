@@ -187,10 +187,18 @@
         return false;
     };
 
+    var getInstrumentedCodeString = function (excludesArray) {
+        var build = '';
+        for (var i = 0; i < excludesArray.length; i += 1) {
+            build += ' -x "' + excludesArray[i] + '"';
+        }
+    };
+
     module.exports = function (grunt) {
 
         var runCmd = getRunCmd(grunt),
-            debug = getGruntDebugMode(grunt) || rtdConf.output.debug;
+            debug = getGruntDebugMode(grunt) || rtdConf.output.debug,
+            instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes);
 
         if (!debug) {
             grunt.log.ok = function () {
@@ -245,7 +253,7 @@
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app -x "**/packages/**" -x "**/3rd/**"' + (debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -253,7 +261,7 @@
                         "mkdir -p <%= basePath %>/build/mirror_app;" +
                         "kill `ps -ef|grep -i meteor   | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i mrt      | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
-                        rtdConf.options.killMongo ? "kill `ps -ef|grep -i mongod   | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" : "" +
+                        (rtdConf.options.killMongo ? "kill `ps -ef|grep -i mongod   | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" : "") +
                         "kill `ps -ef|grep -i selenium | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i karma    | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i phantomjs| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
