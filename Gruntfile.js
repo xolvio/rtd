@@ -308,7 +308,7 @@
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
