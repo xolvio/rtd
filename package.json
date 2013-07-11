@@ -37,7 +37,8 @@
         "request": "2.21.x",
         "hash_file": "0.0.x",
         "growl": "~1.7.0",
-        "libnotify": "~1.0.4"
+        "libnotify": "~1.0.4",
+        "grunt-contrib-coffee": "~0.7.0"
     },
     "bundledDependencies": [],
     "license": "MIT",

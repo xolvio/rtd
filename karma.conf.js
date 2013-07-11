@@ -32,7 +32,9 @@ files = [
     'app/server/lib/**/*.coffee',
 
     // now all the dependencies have been sorted, the app code can be loaded
-    'app/**/*.js'
+    'app/**/*.js',
+    'app/**/*.coffee'
+
 ];
 
 
@@ -43,7 +45,8 @@ exclude = [
     'karma.conf.js',
     'app/.meteor/local',
     'app/server/fixture.js',
-    '/packages/**/*'
+    'app/server/fixture.coffee',
+    'app/packages/**/*'
 ];
 
 preprocessors = {

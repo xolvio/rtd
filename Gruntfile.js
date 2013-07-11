@@ -219,8 +219,11 @@
             watch: {
                 files: [
                     '<%= basePath %>/test/unit/**/*.js',
+                    '<%= basePath %>/test/unit/**/*.coffee',
                     '<%= basePath %>/test/rtd/lib/**/*.js',
+                    '<%= basePath %>/test/rtd/lib/**/*.coffee',
                     '<%= basePath %>/test/acceptance/**/*.js',
+                    '<%= basePath %>/test/acceptance/**/*.coffee',
                     '<%= basePath %>/app/**/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
