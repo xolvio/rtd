@@ -67,6 +67,7 @@
     "predef": [         // Extra globals.
         "require",
         "Meteor",
+        "Fixture",
         "Email",
         "__meteor_bootstrap__",
         "console",
