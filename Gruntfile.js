@@ -23,6 +23,7 @@
         tasks.push('bgShell:startMirrorApp');
         tasks.push('bgShell:startKarma');
         tasks.push('bgShell:startApp');
+        tasks.push('runOnce');
         tasks.push('outputPorts');
         tasks.push('watch');
         return tasks;
@@ -44,9 +45,15 @@
         return tasks;
     };
 
-    var startupTasks = constructStartupTasks(),
-        watchTasks = constructWatchTasks();
+    var constructRunOnceTasks = function() {
+        var tasks = constructWatchTasks();
+        tasks.unshift('bgShell:sleep');
+        return tasks;
+    };
 
+    var startupTasks = constructStartupTasks(),
+        watchTasks = constructWatchTasks(),
+        runOnce = constructRunOnceTasks();
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -323,6 +330,10 @@
                     cmd: 'touch <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false,
                     fail: false
+                },
+                sleep: {
+                    cmd: 'echo; echo "Sleeping some to wait for browser to start"; echo; sleep 2; open http://localhost:9876/; sleep 2',
+                    bg: false
                 }
             },
             'unzip': {
@@ -381,6 +392,7 @@
             console.log('Launching Mirror on port 8000');
         });
 
+        grunt.registerTask('runOnce', 'runOnce', runOnce);
         grunt.registerTask('default', startupTasks);
 
     };
