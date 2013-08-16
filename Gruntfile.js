@@ -352,7 +352,6 @@
                 console.log('No coverage reports available from unit tests');
                 return;
             }
-            console.log(getLatestCoverageObject());
             postJson('localhost', 8000, '/coverage/client', getLatestCoverageObject(), done);
         });
 
