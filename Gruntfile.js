@@ -23,13 +23,19 @@
         tasks.push('bgShell:startMirrorApp');
         tasks.push('bgShell:startKarma');
         tasks.push('bgShell:startApp');
+        tasks.push('pollServices');
         tasks.push('outputPorts');
+        if (rtdConf.options.runTestsOnStart) {
+            constructWatchTasks(tasks);
+        }
         tasks.push('watch');
         return tasks;
     };
 
-    var constructWatchTasks = function () {
-        var tasks = [];
+    var constructWatchTasks = function (tasks) {
+        if (!tasks) {
+            tasks = [];
+        }
         tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
@@ -373,11 +379,48 @@
         });
 
         grunt.registerTask('outputPorts', 'outputPorts', function () {
-            console.log('Launching Selenium-server on port 4444');
-            console.log('Launching Karma listener on port 9876');
-            console.log('Launching Karma runner on port 9100');
-            console.log('Launching Meteor on port 3000');
-            console.log('Launching Mirror on port 8000');
+            console.log('Selenium-server on port 4444');
+            console.log('Karma listener on port 9876');
+            console.log('Karma runner on port 9100');
+            console.log('Meteor on port 3000');
+            console.log('Mirror on port 8000');
+        });
+
+        grunt.registerTask('pollServices', 'pollServices', function () {
+            console.log('RTD is starting up...');
+            var done = this.async(),
+                readyPorts = {};
+
+            var waitForServer = function (port, callback) {
+                var intervalId = setInterval(function () {
+                    require('request').get({
+                        url: 'http://localhost:' + port
+                    }, function (error) {
+                        if (!error) {
+                            clearInterval(intervalId);
+                            callback(port);
+                        }
+                    });
+                }, 500);
+            };
+
+            var setReadyFlag = function (port) {
+                readyPorts[port] = true;
+            };
+
+            waitForServer(4444, setReadyFlag);
+            waitForServer(9876, setReadyFlag);
+            waitForServer(3000, setReadyFlag);
+            waitForServer(8000, setReadyFlag);
+
+
+            var i = setInterval(function () {
+                if (Object.keys(readyPorts).length === 4) {
+                    clearInterval(i);
+                    done();
+                }
+            }, 500);
+
         });
 
         grunt.registerTask('default', startupTasks);

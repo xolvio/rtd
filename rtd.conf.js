@@ -11,6 +11,7 @@ module.exports = {
         karma: false            // shows Karma's output
     },
     options: {
+        runTestsOnStart: true,
         coverage: {
             // Coverage checks run after all unit and acceptance tests run. You can disable here or set the thresholds
             enabled: true,
