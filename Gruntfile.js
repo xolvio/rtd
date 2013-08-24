@@ -297,7 +297,8 @@
                         'cd <%= basePath %>/build/mirror_app/packages;' +
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
-                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
+                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
+                        'cp <%= basePath %>/test/settings/settings.json <%= basePath %>/build/mirror_app/settings.json',
                     bg: false
                 },
                 karmaRun: {
