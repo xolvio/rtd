@@ -115,9 +115,9 @@
         req.end();
     }
 
-    function getRunCmd(grunt) {
-        var runCmd = fs.existsSync(PROJECT_BASE_PATH + '/app/smart.json') ? 'mrt' : 'meteor run',
-            settingsPath = getSettingsPath(grunt);
+    function getRunCmd(grunt, appPath) {
+        var runCmd = fs.existsSync(PROJECT_BASE_PATH + '/'+appPath+'/smart.json') ? 'mrt' : 'meteor run',
+            settingsPath = getSettingsPath(grunt, appPath);
 
         if (settingsPath) {
             runCmd += ' --settings ' + settingsPath;
@@ -141,14 +141,14 @@
      * @return {String|Null} path to a settings file, for use when
      *                       executing 'meteor run --settings ...'
      */
-    function getSettingsPath(grunt) {
+    function getSettingsPath(grunt, appPath) {
         var settingsPath,
             viaOption,
             fileExists,
             relativeToProjectBase;
 
         viaOption = grunt.option('settingsPath');
-        settingsPath = viaOption || (PROJECT_BASE_PATH + '/app/settings.json');
+        settingsPath = viaOption || (PROJECT_BASE_PATH + '/'+appPath+'/settings.json');
         fileExists = fs.existsSync(settingsPath);
 
         if (viaOption && !fileExists) {
@@ -165,9 +165,9 @@
             // ex. ../../app/settings.json
             settingsPath = settingsPath.substring(PROJECT_BASE_PATH.length);
 
-            if (0 === settingsPath.indexOf('/app/')) {
+            if (0 === settingsPath.indexOf('/'+appPath+'/')) {
                 // strip left-over relative part
-                settingsPath = settingsPath.substring(5);
+                settingsPath = settingsPath.substring(appPath.length+2);
             }
 
         }
@@ -203,7 +203,8 @@
 
     module.exports = function (grunt) {
 
-        var runCmd = getRunCmd(grunt),
+        var runCmd3000 = getRunCmd(grunt, 'app'),
+            runCmd8000 = getRunCmd(grunt, 'build/mirror_app'),
             debug = getGruntDebugMode(grunt) || rtdConf.output.debug,
             instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes);
 
@@ -290,11 +291,11 @@
                 },
                 startApp: {
                     cmd: 'cd <%= basePath %>/app;' +
-                        runCmd + ' --port 3000' + (rtdConf.output.appOutput || debug ? ';' : ' > /dev/null 2>&1;')
+                        runCmd3000 + ' --port 3000' + (rtdConf.output.appOutput || debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 startMirrorApp: {
                     cmd: 'cd <%= basePath %>/build/mirror_app;' +
-                        runCmd + ' --port 8000' + (rtdConf.output.mirrorOutput || debug ? ';' : ' > /dev/null 2>&1;')
+                        runCmd8000 + ' --port 8000' + (rtdConf.output.mirrorOutput || debug ? ';' : ' > /dev/null 2>&1;')
                 },
                 synchronizeMirrorApp: {
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ <%= basePath %>/build/mirror_app;' +
@@ -302,7 +303,8 @@
                         'cd <%= basePath %>/build/mirror_app/packages;' +
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
-                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
+                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
+                        'cp <%= basePath %>/test/settings/settings.json <%= basePath %>/build/mirror_app/settings.json',
                     bg: false
                 },
                 karmaRun: {
