@@ -310,14 +310,14 @@
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --noStack <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
+                        'jasmine-node --verbose <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },
