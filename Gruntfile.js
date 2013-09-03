@@ -304,7 +304,7 @@
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
-                        'cp <%= basePath %>/test/settings/settings.json <%= basePath %>/build/mirror_app/settings.json',
+                        'if `test -d <%= basePath %>/test/settings`; then cp <%= basePath %>/test/settings/settings.json <%= basePath %>/build/mirror_app/settings.json; fi;',
                     bg: false
                 },
                 karmaRun: {
@@ -316,14 +316,14 @@
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --noStack <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
+                        'jasmine-node --verbose <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },
