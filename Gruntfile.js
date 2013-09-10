@@ -111,7 +111,7 @@
     }
 
     function getRunCmd(grunt, appPath) {
-        var runCmd = fs.existsSync(PROJECT_BASE_PATH + '/'+appPath+'/smart.json') ? 'mrt' : 'meteor run',
+        var runCmd = fs.existsSync(PROJECT_BASE_PATH + '/' + appPath + '/smart.json') ? 'mrt' : 'meteor run',
             settingsPath = getSettingsPath(grunt, appPath);
 
         if (settingsPath) {
@@ -133,6 +133,7 @@
      *
      * @method getSettingsPath
      * @param {Object} grunt
+     * @param {String} appPath
      * @return {String|Null} path to a settings file, for use when
      *                       executing 'meteor run --settings ...'
      */
@@ -143,7 +144,7 @@
             relativeToProjectBase;
 
         viaOption = grunt.option('settingsPath');
-        settingsPath = viaOption || (PROJECT_BASE_PATH + '/'+appPath+'/settings.json');
+        settingsPath = viaOption || (PROJECT_BASE_PATH + '/' + appPath + '/settings.json');
         fileExists = fs.existsSync(settingsPath);
 
         if (viaOption && !fileExists) {
@@ -160,9 +161,9 @@
             // ex. ../../app/settings.json
             settingsPath = settingsPath.substring(PROJECT_BASE_PATH.length);
 
-            if (0 === settingsPath.indexOf('/'+appPath+'/')) {
+            if (0 === settingsPath.indexOf('/' + appPath + '/')) {
                 // strip left-over relative part
-                settingsPath = settingsPath.substring(appPath.length+2);
+                settingsPath = settingsPath.substring(appPath.length + 2);
             }
 
         }
@@ -415,7 +416,7 @@
                 if (Object.keys(readyPorts).length === 4) {
                     clearInterval(i);
                     if (rtdConf.options.runTestsOnStart) {
-                        setTimeout(function() {
+                        setTimeout(function () {
                             fs.utimes(PROJECT_BASE_PATH + '/app/.meteor/packages', new Date(), new Date());
                         }, 500);
                     }
