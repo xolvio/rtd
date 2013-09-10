@@ -25,17 +25,12 @@
         tasks.push('bgShell:startApp');
         tasks.push('pollServices');
         tasks.push('outputPorts');
-        if (rtdConf.options.runTestsOnStart) {
-            constructWatchTasks(tasks);
-        }
         tasks.push('watch');
         return tasks;
     };
 
-    var constructWatchTasks = function (tasks) {
-        if (!tasks) {
-            tasks = [];
-        }
+    var constructWatchTasks = function () {
+        var tasks = [];
         tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
@@ -232,6 +227,7 @@
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/test/acceptance/**/*.coffee',
                     '<%= basePath %>/app/**/*',
+                    '<%= basePath %>/app/.meteor/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
                 ],
                 tasks: watchTasks
@@ -303,8 +299,7 @@
                         'cd <%= basePath %>/build/mirror_app/packages;' +
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
-                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
-                        'cp <%= basePath %>/test/settings/settings.json <%= basePath %>/build/mirror_app/settings.json',
+                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
                     bg: false
                 },
                 karmaRun: {
@@ -419,6 +414,11 @@
             var i = setInterval(function () {
                 if (Object.keys(readyPorts).length === 4) {
                     clearInterval(i);
+                    if (rtdConf.options.runTestsOnStart) {
+                        setTimeout(function() {
+                            fs.utimes(PROJECT_BASE_PATH + '/app/.meteor/packages', new Date(), new Date());
+                        }, 500);
+                    }
                     done();
                 }
             }, 500);
