@@ -300,7 +300,8 @@
                         'cd <%= basePath %>/build/mirror_app/packages;' +
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
-                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;',
+                        'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
+                        'echo istanbul-middleware-port >> <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false
                 },
                 karmaRun: {
