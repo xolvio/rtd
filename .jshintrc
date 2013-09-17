@@ -82,7 +82,8 @@
         "__filename",
         "__dirname",
         "waitsFor",
-        "runs"
+        "runs",
+        "WebApp"
     ]
 //    "indent"        : 4         // Specify indentation spacing
 }

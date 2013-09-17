@@ -218,6 +218,7 @@
             chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
             chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
+            istanbulExclude: rtdConf.options.coverage.exclude,
             debugMode: debug,
             watch: {
                 files: [
@@ -261,7 +262,7 @@
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app -x <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -301,7 +302,9 @@
                         'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
-                        'echo istanbul-middleware-port >> <%= basePath %>/build/mirror_app/.meteor/packages;',
+                        'echo >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
+                        'echo istanbul-middleware-port >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
+                        'echo meteor-fixture >> <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false
                 },
                 karmaRun: {

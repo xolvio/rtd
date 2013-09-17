@@ -21,7 +21,8 @@ module.exports = {
                 'branches': 100,
                 'functions': 100,
                 'lines': 100
-            }
+            },
+            exclude: '**/do_not_cover/**'
         },
         // if you have client libraries, you'll want to exclude them from test coverage
         instrumentationExcludes: ['**/packages/**', '**/3rd/**', 'fixture.js', 'fixture.coffee'],
