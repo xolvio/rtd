@@ -1,5 +1,6 @@
 // *********************************************************************************************************************
-// IF YOU WANT TO CUSTOMIZE ANYTHING HERE, COPY THIS FILE TO YOUR /test DIRECTORY AND RTD WILL USE THAT FILE INSTEAD
+// IF YOU WANT TO CUSTOMIZE ANYTHING HERE, COPY THIS FILE TO YOUR /test DIRECTORY AND CHANGE basePath CONFIGURATION to '..'.
+// THEN RTD WILL USE THAT FILE INSTEAD.
 // *********************************************************************************************************************
 
 module.exports = function(config){
