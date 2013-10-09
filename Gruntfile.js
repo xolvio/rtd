@@ -218,7 +218,7 @@
             chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
             chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
-            istanbulExclude: rtdConf.options.coverage.exclude,
+            istanbulExclude: rtdConf.options.coverage.exclude?'-x ' + rtdConf.options.coverage.exclude:'',
             debugMode: debug,
             watch: {
                 files: [
@@ -262,7 +262,7 @@
                         'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app -x <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'istanbul instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
