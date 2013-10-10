@@ -31,6 +31,12 @@
 
     var constructWatchTasks = function () {
         var tasks = [];
+
+        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+            tasks.push('jshint:app');
+            tasks.push('jshint:test');
+        }
+
         tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
@@ -339,11 +345,22 @@
                     src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
                     dest: '<%= basePath %>/test/rtd/lib/bin/'
                 }
+            },
+            'jshint': {
+                app: {
+                    options: rtdConf.options.jshint.appOptions,
+                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js']
+                },
+                test: {
+                    options: rtdConf.options.jshint.testOptions,
+                    src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
+                }
             }
         });
         grunt.loadNpmTasks('grunt-bg-shell');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-zip');
+        grunt.loadNpmTasks('grunt-contrib-jshint');
 
         grunt.registerTask('chmod', 'chmod', function () {
             fs.chmodSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver', '755');
