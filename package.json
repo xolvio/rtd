@@ -41,7 +41,8 @@
         "grunt-contrib-coffee": "~0.7.0",
         "karma": "~0.10",
         "karma-coverage": "~0.1",
-        "karma-phantomjs-launcher": "~0.1"
+        "karma-phantomjs-launcher": "~0.1",
+        "grunt-contrib-jshint": "~0.6.4"
     },
     "bundledDependencies": [],
     "license": "MIT",
