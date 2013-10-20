@@ -69,14 +69,16 @@
     }
 
     function postJson(host, port, path, data, done) {
+        var appPath,
+            path = require('path');
 
         if (!data) {
             return;
         }
-
+        appPath = path.normalize(PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
         var find = './app';
         var re = new RegExp(find, 'g');
-        data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
+        data = data.replace(re, appPath);
 
         var options = {
             hostname: host,
