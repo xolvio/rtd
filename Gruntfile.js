@@ -307,7 +307,6 @@
                         'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
                         'echo >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
-                        'echo http >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
                         'echo istanbul-middleware-port >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
                         'echo meteor-fixture >> <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false
