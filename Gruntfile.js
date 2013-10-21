@@ -79,8 +79,7 @@
             return;
         }
 
-        var find = './app';
-        var re = new RegExp(find, 'g');
+        var re = /\.\/app/g;
         data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
 
         var options = {
