@@ -16,15 +16,16 @@
         var tasks = [];
         tasks.push('bgShell:killAll');
         tasks.push('downloadAndOrStartSelenium');
-        tasks.push('bgShell:startKarma');
         tasks.push('bgShell:synchronizeMirrorApp');
         if (rtdConf.options.coverage.enabled) {
             tasks.push('bgShell:instrumentCode');
         }
         tasks.push('bgShell:startMirrorApp');
+        tasks.push('bgShell:startKarma');
         tasks.push('bgShell:startApp');
         tasks.push('pollServices');
         tasks.push('outputPorts');
+        tasks.push('watch');
         return tasks;
     };
 
@@ -43,6 +44,10 @@
         }
         return tasks;
     };
+
+    var startupTasks = constructStartupTasks(),
+        watchTasks = constructWatchTasks();
+
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -69,16 +74,14 @@
     }
 
     function postJson(host, port, path, data, done) {
-        var appPath,
-            path = require('path');
 
         if (!data) {
             return;
         }
-        appPath = path.normalize(PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
+
         var find = './app';
         var re = new RegExp(find, 'g');
-        data = data.replace(re, appPath);
+        data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
 
         var options = {
             hostname: host,
@@ -199,14 +202,7 @@
         var runCmd3000 = getRunCmd(grunt, 'app'),
             runCmd8000 = getRunCmd(grunt, 'build/mirror_app'),
             debug = getGruntDebugMode(grunt) || rtdConf.output.debug,
-            instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes),
-            startupTasks = constructStartupTasks(),
-            watchTasks = constructWatchTasks(),
-            runOnceTasks = startupTasks.slice(0);
-
-        startupTasks.push('watch');
-        runOnceTasks.push.apply(runOnceTasks, constructWatchTasks());
-        runOnceTasks.push('bgShell:killAll');
+            instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes);
 
         if (!debug) {
             grunt.log.ok = function () {
@@ -263,7 +259,7 @@
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
-                        'karma start <%= karmaConfigFile %> --reporters progress,junit;'
+                        'karma start <%= karmaConfigFile %>;'
                 },
                 instrumentCode: {
                     cmd: 'istanbul instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
@@ -314,21 +310,21 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run  <%= karmaConfigFile %> --reporters progress,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
+                        'jasmine-node --verbose <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },
@@ -436,7 +432,6 @@
         });
 
         grunt.registerTask('default', startupTasks);
-        grunt.registerTask('runOnce', runOnceTasks);
 
     };
 
