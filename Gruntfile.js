@@ -320,7 +320,7 @@
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --captureExceptions --junitreport --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
