@@ -65,10 +65,8 @@ module.exports = function(config){
 
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit'
-        reporters : ['dots', 'coverage', 'junit'],
-        junitReporter: {
-            outputFile: 'test/rtd/reports/test-results.xml'
-        },
+        reporters : ['dots', 'coverage'],
+
 
         // web server port
         port : 9876,
