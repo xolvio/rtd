@@ -347,11 +347,11 @@
             },
             'jshint': {
                 app: {
-                    options: rtdConf.options.jshint.appOptions,
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions?rtdConf.options.jshint.appOptions:{},
                     src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js']
                 },
                 test: {
-                    options: rtdConf.options.jshint.testOptions,
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions?rtdConf.options.jshint.testOptions:{},
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
                 }
             }
