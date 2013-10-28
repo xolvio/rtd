@@ -309,7 +309,8 @@
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
                         'echo >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
                         'echo istanbul-middleware-port >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
-                        'echo meteor-fixture >> <%= basePath %>/build/mirror_app/.meteor/packages;',
+                        'echo meteor-fixture >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
+                        'echo http >> <%= basePath %>/build/mirror_app/.meteor/packages;',
                     bg: false
                 },
                 karmaRun: {
@@ -346,11 +347,11 @@
             },
             'jshint': {
                 app: {
-                    options: rtdConf.options.jshint.appOptions,
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions?rtdConf.options.jshint.appOptions:{},
                     src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js']
                 },
                 test: {
-                    options: rtdConf.options.jshint.testOptions,
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions?rtdConf.options.jshint.testOptions:{},
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
                 }
             }
@@ -447,7 +448,7 @@
         });
 
         grunt.registerTask('default', startupTasks);
-        grunt.registerTask('runOnce', runOnceTasks);
+//        grunt.registerTask('runOnce', runOnceTasks);
 
     };
 
