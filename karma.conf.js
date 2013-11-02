@@ -63,9 +63,14 @@ module.exports = function(config){
             file: 'coverage.txt'
         },
 
+        junitReporter: {
+            outputFile: 'build/reports/TEST-UnitTests.xml',
+            suite: ''
+        },
+
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit'
-        reporters : ['dots', 'coverage'],
+        reporters : ['dots', 'progress', 'coverage', 'junit'],
 
 
         // web server port
