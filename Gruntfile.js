@@ -209,7 +209,7 @@
 
         startupTasks.push('watch');
         runOnceTasks.push.apply(runOnceTasks, constructWatchTasks());
-//        runOnceTasks.push('bgShell:killAll');
+        runOnceTasks.push('closeWebdriverSessions');
 
         if (!debug) {
             grunt.log.ok = function () {
@@ -225,7 +225,7 @@
             chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
             chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
-            istanbulExclude: rtdConf.options.coverage.exclude?'-x ' + rtdConf.options.coverage.exclude:'',
+            istanbulExclude: rtdConf.options.coverage.exclude ? '-x ' + rtdConf.options.coverage.exclude : '',
             debugMode: debug,
             watch: {
                 files: [
@@ -349,11 +349,11 @@
             },
             'jshint': {
                 app: {
-                    options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions?rtdConf.options.jshint.appOptions:{},
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions ? rtdConf.options.jshint.appOptions : {},
                     src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js']
                 },
                 test: {
-                    options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions?rtdConf.options.jshint.testOptions:{},
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
                 }
             }
@@ -399,6 +399,45 @@
             });
         });
 
+        grunt.registerTask('closeWebdriverSessions', 'closeWebdriverSessions', function () {
+
+            var done = this.async(),
+                request = require('request');
+
+            var getWebdriverSessions = function (callback) {
+                request.get({
+                    url: 'http://localhost:4444/wd/hub/sessions',
+                    headers: {
+                        'Content-type': 'application/json'
+                    }
+                }, function (error, response, body) {
+                    callback(JSON.parse(body).value);
+                });
+            };
+
+            var deleteWebdriverSession = function (sessionId) {
+                request.del({
+                    url: 'http://localhost:4444/wd/hub/session/' + sessionId,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }, function() {
+                    done(); // TODO needs to wait for sessions to have closed
+                });
+            };
+
+            var deleteWebdriverSessions = function (sessions) {
+                for (var i = 0; i < sessions.length; i += 1) {
+                    deleteWebdriverSession(sessions[i].id);
+                }
+            };
+
+            getWebdriverSessions(function (sessions) {
+                deleteWebdriverSessions(sessions);
+            });
+
+        });
+
         grunt.registerTask('outputPorts', 'outputPorts', function () {
             console.log('Selenium-server on port 4444');
             console.log('Karma listener on port 9876');
@@ -433,7 +472,6 @@
             waitForServer(9876, setReadyFlag);
             waitForServer(3000, setReadyFlag);
             waitForServer(8000, setReadyFlag);
-
 
             var i = setInterval(function () {
                 if (Object.keys(readyPorts).length === 4) {
