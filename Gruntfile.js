@@ -39,8 +39,14 @@
         tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
-        tasks.push('bgShell:runTests');
-        if (rtdConf.options.coverage.enabled) {
+
+        if (rtdConf.options.useCucumberJs) {
+            tasks.push('cucumberjs');
+        } else {
+            tasks.push('bgShell:runTests');
+        }
+
+        if (rtdConf.options.coverage.enabled && !rtdConf.options.useCucumberJs) {
             if (rtdConf.options.coverage.includeUnitCoverage) {
                 tasks.push('postLatestUnitCoverage');
             }
@@ -235,6 +241,9 @@
                     '<%= basePath %>/test/rtd/lib/**/*.coffee',
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/test/acceptance/**/*.coffee',
+                    '<%= basePath %>/test/features/**/*.js',
+                    '<%= basePath %>/test/features/**/*.feature',
+                    '<%= basePath %>/test/features/**/*.coffee',
                     '<%= basePath %>/app/**/*',
                     '<%= basePath %>/app/.meteor/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
@@ -356,12 +365,14 @@
                     options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
                 }
-            }
+            },
+            cucumberjs: rtdConf.options.cucumberjs ? rtdConf.options.cucumberjs : {}
         });
         grunt.loadNpmTasks('grunt-bg-shell');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-zip');
         grunt.loadNpmTasks('grunt-contrib-jshint');
+        grunt.loadNpmTasks('grunt-cucumber');
 
         grunt.registerTask('chmod', 'chmod', function () {
             fs.chmodSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver', '755');
@@ -421,7 +432,7 @@
                     headers: {
                         'Accept': 'application/json'
                     }
-                }, function() {
+                }, function () {
                     done(); // TODO needs to wait for sessions to have closed
                 });
             };

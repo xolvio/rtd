@@ -11,11 +11,19 @@ module.exports = {
         karma: false            // shows Karma's output
     },
     options: {
+        useCucumberJs: false, // EXPERIMENTAL FEATURE: DISABLES THE RUNNING OF SPEC FILES AND CODE COVERAGE FOR NOW
+        cucumberjs: { // See here for more details: https://github.com/s9tpepper/grunt-cucumber-js
+            src: '<%= basePath %>/test/features',
+            options: {
+                steps: "<%= basePath %>/test/features/step_definitions",
+                format: 'pretty'
+            }
+        },
         runTestsOnStart: true,
         coverage: {
             // Coverage checks run after all unit and acceptance tests run. You can disable here or set the thresholds
             enabled: true,
-            includeUnitCoverage: false,
+            includeUnitCoverage: true,
             thresholds: {
                 'statements': 100,
                 'branches': 100,

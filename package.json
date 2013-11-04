@@ -1,54 +1,55 @@
 {
-    "name": "rtd",
-    "preferGlobal": true,
-    "analyze": false,
-    "version": "0.0.1",
-    "author": "Sam Hatoum <sam@xolvio.com>",
-    "description": "The Meteor test runner",
-    "contributors": [
-        {
-            "name": "Miguel Alvarado",
-            "email": "miguel@xolvio.com"
-        }
-    ],
-    "repository": {
-        "type": "git",
-        "url": "git@github.com:xolvio/rtd.git"
-    },
-    "keywords": [
-        "feedback",
-        "test",
-        "tdd",
-        "rtd",
-        "acceptance",
-        "testing",
-        "test runner"
-    ],
-    "dependencies": {
-        "selenium-webdriver": "2.33.0"
-    },
-    "devDependencies": {
-        "grunt": "~0.4.1",
-        "grunt-exec": "~0.4.0",
-        "grunt-bg-shell": "~2.0.1",
-        "grunt-contrib-watch": "~0.3.1",
-        "grunt-zip": "~0.9.0",
-        "freeport": "1.0.x",
-        "request": "2.21.x",
-        "hash_file": "0.0.x",
-        "growl": "~1.7.0",
-        "libnotify": "~1.0.4",
-        "grunt-contrib-coffee": "~0.7.0",
-        "karma": "~0.10",
-        "karma-coverage": "~0.1",
-        "karma-phantomjs-launcher": "~0.1",
-        "karma-junit-reporter": "~0.1",
-        "grunt-contrib-jshint": "~0.6.4"
-    },
-    "bundledDependencies": [],
-    "license": "MIT",
-    "engines": {
-        "node": ">=0.10",
-        "npm": "1.1.32"
+  "name": "rtd",
+  "preferGlobal": true,
+  "analyze": false,
+  "version": "0.0.1",
+  "author": "Sam Hatoum <sam@xolvio.com>",
+  "description": "The Meteor test runner",
+  "contributors": [
+    {
+      "name": "Miguel Alvarado",
+      "email": "miguel@xolvio.com"
     }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xolvio/rtd.git"
+  },
+  "keywords": [
+    "feedback",
+    "test",
+    "tdd",
+    "rtd",
+    "acceptance",
+    "testing",
+    "test runner"
+  ],
+  "dependencies": {
+    "selenium-webdriver": "2.33.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-exec": "~0.4.0",
+    "grunt-bg-shell": "~2.0.1",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-zip": "~0.9.0",
+    "freeport": "1.0.x",
+    "request": "2.21.x",
+    "hash_file": "0.0.x",
+    "growl": "~1.7.0",
+    "libnotify": "~1.0.4",
+    "grunt-contrib-coffee": "~0.7.0",
+    "karma": "~0.10",
+    "karma-coverage": "~0.1",
+    "karma-phantomjs-launcher": "~0.1",
+    "karma-junit-reporter": "~0.1",
+    "grunt-contrib-jshint": "~0.6.4",
+    "grunt-cucumber": "~0.2.3"
+  },
+  "bundledDependencies": [],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10",
+    "npm": "1.1.32"
+  }
 }
