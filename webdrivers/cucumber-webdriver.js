@@ -75,10 +75,11 @@ var Webdriver;
                     reuseOrCreateSession(sessions, webBrowser, scriptTimeout, implicitlyWait, callback);
                 });
             }
-        }
+        };
     };
 })();
 
 module.exports = function (webBrowser, scriptTimeout, implicitlyWait) {
-    return Webdriver(webBrowser, scriptTimeout, implicitlyWait)
+    "use strict";
+    return new Webdriver(webBrowser, scriptTimeout, implicitlyWait);
 };

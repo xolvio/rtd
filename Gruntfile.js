@@ -25,13 +25,14 @@
         tasks.push('bgShell:startApp');
         tasks.push('pollServices');
         tasks.push('outputPorts');
+        tasks.push('watch');
         return tasks;
     };
 
-    var constructWatchTasks = function () {
+    var constructWatchTasks = function (runOnceMode) {
         var tasks = [];
 
-        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+        if (!runOnceMode && rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
             tasks.push('jshint:app');
             tasks.push('jshint:test');
         }
@@ -55,6 +56,16 @@
         }
         return tasks;
     };
+
+    function constructRunOnceTasks(startupTasks) {
+        var tasks = [];
+        tasks.push('jshint:app');
+        tasks.push('jshint:test');
+        tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
+        tasks.push.apply(tasks, constructWatchTasks(true));
+        tasks.push('closeWebdriverSessions');
+        return tasks;
+    }
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -211,11 +222,7 @@
             instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes),
             startupTasks = constructStartupTasks(),
             watchTasks = constructWatchTasks(),
-            runOnceTasks = startupTasks.slice(0);
-
-        startupTasks.push('watch');
-        runOnceTasks.push.apply(runOnceTasks, constructWatchTasks());
-        runOnceTasks.push('closeWebdriverSessions');
+            runOnceTasks = constructRunOnceTasks(startupTasks);
 
         if (!debug) {
             grunt.log.ok = function () {
