@@ -359,7 +359,7 @@
             },
             'unzip': {
                 chromeDriver: {
-                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
+                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>.zip',
                     dest: '<%= basePath %>/test/rtd/lib/bin/'
                 }
             },
