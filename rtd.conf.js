@@ -46,10 +46,10 @@ module.exports = {
     selenium: {
         // You can set specific versions of selenium-server / chromedriver to use here
         darwin: {
-            chromeDriverName: 'chromedriver2',
+            chromeDriverName: 'chromedriver',
             chromeDriverOs: 'mac32',
-            chromeDriverVersion: '0.8',
-            chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673'
+            chromeDriverVersion: '2.6',
+            chromeDriverSha: '4643652d403961dd9a9a1980eb1a06bf8b6e9bad'
         },
         linux: {
             chromeDriverName: 'chromedriver',
