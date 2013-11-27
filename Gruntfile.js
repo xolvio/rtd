@@ -37,7 +37,12 @@
             tasks.push('jshint:test');
         }
 
-        tasks.push('bgShell:karmaRun');
+	    if (!runOnceMode && rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+		    tasks.push('coffeelint:app');
+		    tasks.push('coffeelint:test');
+	    }
+
+	    tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
 
@@ -61,6 +66,8 @@
         var tasks = [];
         tasks.push('jshint:app');
         tasks.push('jshint:test');
+	    tasks.push('coffeelint:app');
+	    tasks.push('coffeelint:test');
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
         tasks.push('closeWebdriverSessions');
@@ -373,12 +380,23 @@
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
                 }
             },
+	        'coffeelint': {
+		        app: {
+			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.appOptions ? rtdConf.options.coffeelint.appOptions : {},
+			        src: ['<%= basePath %>/app/**/*.coffee', '!<%= basePath %>/app/.meteor/**/*.coffee', '!<%= basePath %>/app/packages/**/*.coffee']
+		        },
+		        test: {
+			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.testOptions ? rtdConf.options.coffeelint.testOptions : {},
+			        src: ['<%= basePath %>/test/**/*.coffee', '!<%= basePath %>/test/rtd/**/*.coffee']
+		        }
+	        },
             cucumberjs: rtdConf.options.cucumberjs ? rtdConf.options.cucumberjs : {}
         });
         grunt.loadNpmTasks('grunt-bg-shell');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-zip');
         grunt.loadNpmTasks('grunt-contrib-jshint');
+	    grunt.loadNpmTasks('grunt-coffeelint');
         grunt.loadNpmTasks('grunt-cucumber');
 
         grunt.registerTask('chmod', 'chmod', function () {

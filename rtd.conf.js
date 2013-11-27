@@ -38,6 +38,12 @@ module.exports = {
             appOptions: {},
             testOptions: {}
         },
+	    coffeelint: {
+		    enabled: true,
+		    // if you want to customize coffeelint options for app and/or test code, you can do that here
+			appOptions: {},
+	        testOptions: {}
+	    },
         // if you have client libraries, you'll want to exclude them from test coverage
         instrumentationExcludes: ['**/packages/**', '**/3rd/**', 'fixture.js', 'fixture.coffee'],
         // If your dev environment has a stand-alone mongo service, you should disabled this
