@@ -377,7 +377,7 @@
                 },
                 test: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
-                    src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js']
+                    src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js', '!<%= basePath %>/test/rtd.conf.js', '!<%= basePath %>/test/karma.conf.js']
                 }
             },
 	        'coffeelint': {
