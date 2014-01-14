@@ -25,6 +25,10 @@
     "test runner"
   ],
   "dependencies": {
+    "karma": "~0.10",
+    "istanbul": "0.1.39",
+    "jasmine-node": "",
+    "phantomjs": "1.9.0-6",
     "selenium-webdriver": "2.33.0"
   },
   "devDependencies": {
@@ -39,7 +43,6 @@
     "growl": "~1.7.0",
     "libnotify": "~1.0.4",
     "grunt-contrib-coffee": "~0.7.0",
-    "karma": "~0.10",
     "karma-coverage": "~0.1",
     "karma-phantomjs-launcher": "~0.1",
     "karma-junit-reporter": "~0.1",
