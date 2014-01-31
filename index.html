@@ -47,8 +47,8 @@
 <ul>
     <li>Run all your unit tests in <strong>any browser</strong> [default: PhantomJS]</li>
     <li>Run all your acceptance tests in <strong>any browser</strong> [default: Chrome]</li>
-    <li>Combines test coverage from <strong>unit and acceptance</strong> runs</li>
-    <li>Checks the coverage thresholds and provides a <strong>pretty report</strong> [default: 100%]</li>
+    <li>Combine test coverage from <strong>unit and acceptance</strong> runs</li>
+    <li>Check the coverage thresholds and provides a <strong>pretty report</strong> [default: 100%]</li>
 </ul>
 <p>We have focused our efforts on making RTD as seamless and fast as possible. It will run in the background
     without bothering your workflow and you simply get pass/fail as you develop. </p>
@@ -58,7 +58,7 @@
             allowfullscreen></iframe>
 </div>
 
-<p>RTD is highly customizable. You can test using any browser, including mobile and you can choose your testing
+<p>RTD is highly customizable. You can test using any browser, including mobile, and you can choose your testing
     framework like Jasmine (default), Mocha etc.</p>
 
 <h3>
@@ -67,8 +67,8 @@
 
 <hr>
 <p>Ensure you have <a href="http://nodejs.org/download/">node</a> and <a href="http://meteor.com">Meteor</a> and
-    that these dependencies globally installed (you may need to run this as sudo, depending on how you're
-    setup).
+    that the dependencies below are globally installed (you may need to run this as sudo, depending on your
+    setup):
 </p>
 
 <p><b>NOTE: Due to a <a href="https://github.com/karma-runner/karma/issues/558#issuecomment-18707232">bug in
@@ -80,7 +80,7 @@
 </div>
 
 <p>If you have any issues with phantomJS, you may need to <a href="https://github.com/xolvio/rtd/issues/9">do
-    this</a></p>
+    this</a>.</p>
 
 <p>For growl notifications, you need to install a notifier if you don't already have it:</p>
 
@@ -130,13 +130,13 @@ LINUX:
     │ │ └── &lt;your meteor code here&gt;
     │ ├── test
     │ │ └── acceptance
-    | │ │ └── fixtures
-    | | │ │ └── empty.js
-    | │ │ └── &lt;your end-to-end tests here&gt;
+    │ │ │ └── fixtures
+    │ │ │ │ └── empty.js
+    │ │ │ └── &lt;your end-to-end tests here&gt;
     │ │ └── rtd
-    | │ │ └── &lt;a whole bunch of stuff&gt;
+    │ │ │ └── &lt;a whole bunch of stuff&gt;
     │ │ └── unit
-    | │ │ └── &lt;your unit tests here&gt;
+    │ │ │ └── &lt;your unit tests here&gt;
 </code></pre>
 
 <p>Now every time you start development, just run this: (the first time will take a few minutes as
