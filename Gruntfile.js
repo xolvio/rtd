@@ -69,8 +69,8 @@
             tasks.push('jshint:test');
         }
         if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
-	    tasks.push('coffeelint:app');
-	    tasks.push('coffeelint:test');
+            tasks.push('coffeelint:app');
+            tasks.push('coffeelint:test');
         }
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
