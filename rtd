@@ -7,6 +7,9 @@ NPM_BIN_PATH=$(cd `dirname $0`/node_modules/.bin; echo $PWD)
 if [ "$1" = "--debug" ]; then
     npm install;
     PATH=$NPM_BIN_PATH:$PATH grunt --debug;
+elif [ "$1" = "runOnce" ]; then
+    npm install;
+    PATH=$NPM_BIN_PATH:$PATH grunt runOnce --debug;
 else
     npm --silent install;
     PATH=$NPM_BIN_PATH:$PATH grunt;

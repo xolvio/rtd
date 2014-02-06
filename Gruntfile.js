@@ -64,10 +64,14 @@
 
     function constructRunOnceTasks(startupTasks) {
         var tasks = [];
-        tasks.push('jshint:app');
-        tasks.push('jshint:test');
-	    tasks.push('coffeelint:app');
-	    tasks.push('coffeelint:test');
+        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+            tasks.push('jshint:app');
+            tasks.push('jshint:test');
+        }
+        if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+            tasks.push('coffeelint:app');
+            tasks.push('coffeelint:test');
+        }
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
         tasks.push('closeWebdriverSessions');
