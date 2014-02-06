@@ -63,8 +63,8 @@ module.exports = {
         linux: {
             chromeDriverName: 'chromedriver',
             chromeDriverOs: 'linux64',
-            chromeDriverVersion: '2.0',
-            chromeDriverSha: 'd6c78f1bd48ab74d3c66e779ee2a5b70fc2937fb'
+            chromeDriverVersion: '2.9',
+            chromeDriverSha: '6d8498437795482bb82739e13dfc13e4bcfdd40b'
         },
         seleniumServeVersion: '2.32.0',
         seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a'
