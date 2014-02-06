@@ -373,7 +373,7 @@
             'jshint': {
                 app: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions ? rtdConf.options.jshint.appOptions : {},
-                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js', '!<%= basePath %>/app/packages/**/*.js']
+                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js', '!<%= basePath %>/app/packages/**/*.js'].concat(rtdConf.options.jshint && rtdConf.options.jshint.src ? rtdConf.options.jshint.src : [])
                 },
                 test: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
