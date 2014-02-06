@@ -48,7 +48,7 @@
     "karma-junit-reporter": "~0.1",
     "grunt-contrib-jshint": "~0.6.4",
     "grunt-cucumber": "~0.2.3",
-    "grunt-coffeelint": "0.0.7"
+    "grunt-coffeelint": "0.0.8"
   },
   "bundledDependencies": [],
   "license": "MIT",
