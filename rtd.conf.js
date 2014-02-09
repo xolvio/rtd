@@ -36,7 +36,7 @@ module.exports = {
             enabled: true,
             // if you want to customize jslint options for app and/or test code, you can do that here
             appOptions: {},
-            testOptions: {}
+            testOptions: {},
             // set additional directories to ignore ie:
             // src: ['!<%= basePath %>/app/client/javascripts/vendor/*.js']
             src: []
