@@ -24,17 +24,41 @@ module.exports = function(config){
             'app/models/**/*.js',
             'app/models/**/*.coffee',
 
-            // simulate loading order of meteor folder structure
-            'app/lib/**/*.js',
-            'app/lib/**/*.coffee',
-            'app/client/lib/**/*.js',
-            'app/client/lib/**/*.coffee',
-            'app/server/lib/**/*.js',
-            'app/server/lib/**/*.coffee',
+	        // simulate meteor's load order rules:
+	        // - lib directory first
+	        // - deeper directories ahead of shallower ones
+	        // we don't currently handle the other meteor load order rule:
+	        // - main.js files after everything else
+	        'app/lib/*/*/*.js',
+	        'app/lib/*/*.js',
+	        'app/lib/**/*.js',
+	        'app/lib/*/*/*.coffee',
+	        'app/lib/*/*.coffee',
+	        'app/lib/**/*.coffee',
 
-            // now all the dependencies have been sorted, the app code can be loaded
-            'app/**/*.js',
-            'app/**/*.coffee'
+	        'app/client/lib/*/*/*.js',
+	        'app/client/lib/*/*.js',
+	        'app/client/lib/**/*.js',
+	        'app/client/lib/*/*/*.coffee',
+	        'app/client/lib/*/*.coffee',
+	        'app/client/lib/**/*.coffee',
+
+	        'app/server/lib/*/*/*.js',
+	        'app/server/lib/*/*.js',
+	        'app/server/lib/**/*.js',
+	        'app/server/lib/*/*/*.coffee',
+	        'app/server/lib/*/*.coffee',
+	        'app/server/lib/**/*.coffee',
+
+	        // now all the dependencies have been sorted, the app code can be loaded
+	        'app/*/*/*/*.js',
+	        'app/*/*/*.js',
+	        'app/*/*.js',
+	        'app/**/*.js',
+	        'app/*/*/*/*.coffee',
+	        'app/*/*/*.coffee',
+	        'app/*/*.coffee',
+	        'app/**/*.coffee'
 
         ],
 
@@ -63,12 +87,15 @@ module.exports = function(config){
             file: 'coverage.txt'
         },
 
+        junitReporter: {
+            outputFile: 'build/reports/TEST-UnitTests.xml',
+            suite: ''
+        },
+
         // test results reporter to use
         // possible values: 'dots', 'progress', 'junit'
-        reporters : ['dots', 'coverage', 'junit'],
-        junitReporter: {
-            outputFile: 'test/rtd/reports/test-results.xml'
-        },
+        reporters : ['dots', 'progress', 'coverage', 'junit'],
+
 
         // web server port
         port : 9876,

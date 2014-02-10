@@ -69,16 +69,11 @@
     }
 
     function postJson(host, port, path, data, done) {
-        var appPath,
-            path = require('path');
-
         if (!data) {
             return;
         }
-        appPath = path.normalize(PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
-        var find = './app';
-        var re = new RegExp(find, 'g');
-        data = data.replace(re, appPath);
+        var re = /\.\/app/g;
+        data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
 
         var options = {
             hostname: host,
@@ -248,7 +243,9 @@
                         if (err) {
                             var message;
                             // Horrible mechanism, but done doesn't seem to work inside tasks
-                            if (stdout.toLowerCase().indexOf('unit') !== -1) {
+                            if (! stdout) {
+                                message = 'Unit Tests Failed (internal)';
+                            } else if (stdout.toLowerCase().indexOf('unit') !== -1) {
                                 message = 'Unit Tests Failed';
                             } else if (stdout.toLowerCase().indexOf('acceptance') !== -1) {
                                 message = 'Acceptance Tests Failed';
@@ -263,7 +260,7 @@
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
-                        'karma start <%= karmaConfigFile %> --reporters progress,junit;'
+                        'karma start <%= karmaConfigFile %> --reporters progress,junit,coverage;'
                 },
                 instrumentCode: {
                     cmd: 'istanbul instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
@@ -278,7 +275,7 @@
                         "kill `ps -ef|grep -i selenium | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i karma    | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i phantomjs| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
-                        "if `test -d <%= basePath %>/build/reports/coverage`; then rm -rf <%= basePath %>/build/reports/coverage; fi;",
+                        "if `test -d <%= basePath %>/build/reports/coverage`; then rm -rf <%= basePath %>/build/reports/coverage/*; fi;",
                     fail: false,
                     bg: false,
                     stdout: false,
@@ -314,14 +311,14 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run  <%= karmaConfigFile %> --reporters progress,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run  <%= karmaConfigFile %> --reporters progress,coverage,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --captureExceptions --junitreport --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
@@ -340,7 +337,7 @@
             },
             'unzip': {
                 chromeDriver: {
-                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>_<%= chromeDriverVersion %>.zip',
+                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>.zip',
                     dest: '<%= basePath %>/test/rtd/lib/bin/'
                 }
             }

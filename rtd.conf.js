@@ -11,6 +11,14 @@ module.exports = {
         karma: false            // shows Karma's output
     },
     options: {
+        useCucumberJs: false, // EXPERIMENTAL FEATURE: DISABLES THE RUNNING OF SPEC FILES AND CODE COVERAGE FOR NOW
+        cucumberjs: { // See here for more details: https://github.com/s9tpepper/grunt-cucumber-js
+            src: '<%= basePath %>/test/features',
+            options: {
+                steps: "<%= basePath %>/test/features/step_definitions",
+                format: 'pretty'
+            }
+        },
         runTestsOnStart: true,
         coverage: {
             // Coverage checks run after all unit and acceptance tests run. You can disable here or set the thresholds
@@ -24,6 +32,18 @@ module.exports = {
             },
             exclude: '**/do_not_cover/**'
         },
+        jshint: {
+            enabled: true,
+            // if you want to customize jslint options for app and/or test code, you can do that here
+            appOptions: {},
+            testOptions: {}
+        },
+	    coffeelint: {
+		    enabled: true,
+		    // if you want to customize coffeelint options for app and/or test code, you can do that here
+			appOptions: {},
+	        testOptions: {}
+	    },
         // if you have client libraries, you'll want to exclude them from test coverage
         instrumentationExcludes: ['**/packages/**', '**/3rd/**', 'fixture.js', 'fixture.coffee'],
         // If your dev environment has a stand-alone mongo service, you should disabled this
@@ -32,18 +52,18 @@ module.exports = {
     selenium: {
         // You can set specific versions of selenium-server / chromedriver to use here
         darwin: {
-            chromeDriverName: 'chromedriver2',
+            chromeDriverName: 'chromedriver',
             chromeDriverOs: 'mac32',
-            chromeDriverVersion: '0.8',
-            chromeDriverSha: '5a485bb73a7e85a063cffaab9314837a00b98673'
+            chromeDriverVersion: '2.9',
+            chromeDriverSha: '16553f51a165dd202e842b99675ca6e5e1eb2a69'
         },
         linux: {
             chromeDriverName: 'chromedriver',
             chromeDriverOs: 'linux64',
-            chromeDriverVersion: '2.0',
-            chromeDriverSha: 'd6c78f1bd48ab74d3c66e779ee2a5b70fc2937fb'
+            chromeDriverVersion: '2.9',
+            chromeDriverSha: '6d8498437795482bb82739e13dfc13e4bcfdd40b'
         },
-        seleniumServeVersion: '2.32.0',
-        seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a'
+        seleniumServeVersion: '2.39.0',
+        seleniumServeSha: 'f2391600481dd285002d04b66916fc4286ff70ce'
     }
 };
