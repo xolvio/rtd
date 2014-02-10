@@ -25,16 +25,34 @@
         tasks.push('bgShell:startApp');
         tasks.push('pollServices');
         tasks.push('outputPorts');
+        tasks.push('watch');
         return tasks;
     };
 
-    var constructWatchTasks = function () {
+    var constructWatchTasks = function (runOnceMode) {
         var tasks = [];
-        tasks.push('bgShell:karmaRun');
+
+        if (!runOnceMode && rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+            tasks.push('jshint:app');
+            tasks.push('jshint:test');
+        }
+
+	    if (!runOnceMode && rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+		    tasks.push('coffeelint:app');
+		    tasks.push('coffeelint:test');
+	    }
+
+	    tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
-        tasks.push('bgShell:runTests');
-        if (rtdConf.options.coverage.enabled) {
+
+        if (rtdConf.options.useCucumberJs) {
+            tasks.push('cucumberjs');
+        } else {
+            tasks.push('bgShell:runTests');
+        }
+
+        if (rtdConf.options.coverage.enabled && !rtdConf.options.useCucumberJs) {
             if (rtdConf.options.coverage.includeUnitCoverage) {
                 tasks.push('postLatestUnitCoverage');
             }
@@ -43,6 +61,18 @@
         }
         return tasks;
     };
+
+    function constructRunOnceTasks(startupTasks) {
+        var tasks = [];
+        tasks.push('jshint:app');
+        tasks.push('jshint:test');
+	    tasks.push('coffeelint:app');
+	    tasks.push('coffeelint:test');
+        tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
+        tasks.push.apply(tasks, constructWatchTasks(true));
+        //tasks.push('closeWebdriverSessions');
+        return tasks;
+    }
 
     function getLatestCoverageObject() {
         var coverageDir = PROJECT_BASE_PATH + '/build/reports/coverage';
@@ -69,9 +99,11 @@
     }
 
     function postJson(host, port, path, data, done) {
+
         if (!data) {
             return;
         }
+
         var re = /\.\/app/g;
         data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
 
@@ -197,11 +229,7 @@
             instrumentationExcludes = getInstrumentedCodeString(rtdConf.options.instrumentationExcludes),
             startupTasks = constructStartupTasks(),
             watchTasks = constructWatchTasks(),
-            runOnceTasks = startupTasks.slice(0);
-
-        startupTasks.push('watch');
-        runOnceTasks.push.apply(runOnceTasks, constructWatchTasks());
-        runOnceTasks.push('bgShell:killAll');
+            runOnceTasks = constructRunOnceTasks(startupTasks);
 
         if (!debug) {
             grunt.log.ok = function () {
@@ -217,7 +245,7 @@
             chromeDriverName: rtdConf.selenium[process.platform].chromeDriverName,
             chromeDriverOs: rtdConf.selenium[process.platform].chromeDriverOs,
             chromeDriverVersion: rtdConf.selenium[process.platform].chromeDriverVersion,
-            istanbulExclude: rtdConf.options.coverage.exclude?'-x ' + rtdConf.options.coverage.exclude:'',
+            istanbulExclude: rtdConf.options.coverage.exclude ? '-x ' + rtdConf.options.coverage.exclude : '',
             debugMode: debug,
             watch: {
                 files: [
@@ -227,6 +255,9 @@
                     '<%= basePath %>/test/rtd/lib/**/*.coffee',
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/test/acceptance/**/*.coffee',
+                    '<%= basePath %>/test/features/**/*.js',
+                    '<%= basePath %>/test/features/**/*.feature',
+                    '<%= basePath %>/test/features/**/*.coffee',
                     '<%= basePath %>/app/**/*',
                     '<%= basePath %>/app/.meteor/*',
                     '!<%= basePath %>/app/.meteor/local/**/*'
@@ -260,7 +291,7 @@
                 },
                 startKarma: {
                     cmd: 'cd <%= basePath %>/test/rtd;' +
-                        'karma start <%= karmaConfigFile %> --reporters progress,junit,coverage;'
+                        'karma start <%= karmaConfigFile %>'
                 },
                 instrumentCode: {
                     cmd: 'istanbul instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
@@ -275,7 +306,7 @@
                         "kill `ps -ef|grep -i selenium | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i karma    | grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
                         "kill `ps -ef|grep -i phantomjs| grep -v grep| awk '{print $2}'` > /dev/null 2>&1;" +
-                        "if `test -d <%= basePath %>/build/reports/coverage`; then rm -rf <%= basePath %>/build/reports/coverage/*; fi;",
+                        "if `test -d <%= basePath %>/build/reports/coverage`; then rm -rf <%= basePath %>/build/reports/coverage; fi;",
                     fail: false,
                     bg: false,
                     stdout: false,
@@ -311,21 +342,21 @@
                 },
                 karmaRun: {
                     cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run  <%= karmaConfigFile %> --reporters progress,coverage,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
+                        'karma run  <%= karmaConfigFile %> --reporters progress,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --captureExceptions --junitreport --coffee <%= basePath %>/test/acceptance/;',
+                        'jasmine-node --verbose --captureExceptions --junitreport --output <%= basePath %>/build/reports/ --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
+                        'jasmine-node --verbose --junitreport --output <%= basePath %>/build/reports/ <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },
@@ -340,11 +371,35 @@
                     src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>.zip',
                     dest: '<%= basePath %>/test/rtd/lib/bin/'
                 }
-            }
+            },
+            'jshint': {
+                app: {
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions ? rtdConf.options.jshint.appOptions : {},
+                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js', '!<%= basePath %>/app/packages/**/*.js']
+                },
+                test: {
+                    options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
+                    src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js', '!<%= basePath %>/test/rtd.conf.js', '!<%= basePath %>/test/karma.conf.js']
+                }
+            },
+	        'coffeelint': {
+		        app: {
+			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.appOptions ? rtdConf.options.coffeelint.appOptions : {},
+			        src: ['<%= basePath %>/app/**/*.coffee', '!<%= basePath %>/app/.meteor/**/*.coffee', '!<%= basePath %>/app/packages/**/*.coffee']
+		        },
+		        test: {
+			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.testOptions ? rtdConf.options.coffeelint.testOptions : {},
+			        src: ['<%= basePath %>/test/**/*.coffee', '!<%= basePath %>/test/rtd/**/*.coffee']
+		        }
+	        },
+            cucumberjs: rtdConf.options.cucumberjs ? rtdConf.options.cucumberjs : {}
         });
         grunt.loadNpmTasks('grunt-bg-shell');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-zip');
+        grunt.loadNpmTasks('grunt-contrib-jshint');
+	    grunt.loadNpmTasks('grunt-coffeelint');
+        grunt.loadNpmTasks('grunt-cucumber');
 
         grunt.registerTask('chmod', 'chmod', function () {
             fs.chmodSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver', '755');
@@ -382,6 +437,45 @@
             });
         });
 
+        grunt.registerTask('closeWebdriverSessions', 'closeWebdriverSessions', function () {
+
+            var done = this.async(),
+                request = require('request');
+
+            var getWebdriverSessions = function (callback) {
+                request.get({
+                    url: 'http://localhost:4444/wd/hub/sessions',
+                    headers: {
+                        'Content-type': 'application/json'
+                    }
+                }, function (error, response, body) {
+                    callback(JSON.parse(body).value);
+                });
+            };
+
+            var deleteWebdriverSession = function (sessionId) {
+                request.del({
+                    url: 'http://localhost:4444/wd/hub/session/' + sessionId,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }, function () {
+                    done(); // TODO needs to wait for sessions to have closed
+                });
+            };
+
+            var deleteWebdriverSessions = function (sessions) {
+                for (var i = 0; i < sessions.length; i += 1) {
+                    deleteWebdriverSession(sessions[i].id);
+                }
+            };
+
+            getWebdriverSessions(function (sessions) {
+                deleteWebdriverSessions(sessions);
+            });
+
+        });
+
         grunt.registerTask('outputPorts', 'outputPorts', function () {
             console.log('Selenium-server on port 4444');
             console.log('Karma listener on port 9876');
@@ -416,7 +510,6 @@
             waitForServer(9876, setReadyFlag);
             waitForServer(3000, setReadyFlag);
             waitForServer(8000, setReadyFlag);
-
 
             var i = setInterval(function () {
                 if (Object.keys(readyPorts).length === 4) {
