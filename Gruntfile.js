@@ -64,17 +64,13 @@
 
     function constructRunOnceTasks(startupTasks) {
         var tasks = [];
-        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
-            tasks.push('jshint:app');
-            tasks.push('jshint:test');
-        }
-        if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
-            tasks.push('coffeelint:app');
-            tasks.push('coffeelint:test');
-        }
+        tasks.push('jshint:app');
+        tasks.push('jshint:test');
+	    tasks.push('coffeelint:app');
+	    tasks.push('coffeelint:test');
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
-        tasks.push('closeWebdriverSessions');
+        //tasks.push('closeWebdriverSessions');
         return tasks;
     }
 
@@ -278,7 +274,9 @@
                         if (err) {
                             var message;
                             // Horrible mechanism, but done doesn't seem to work inside tasks
-                            if (stdout.toLowerCase().indexOf('unit') !== -1) {
+                            if (! stdout) {
+                                message = 'Unit Tests Failed (internal)';
+                            } else if (stdout.toLowerCase().indexOf('unit') !== -1) {
                                 message = 'Unit Tests Failed';
                             } else if (stdout.toLowerCase().indexOf('acceptance') !== -1) {
                                 message = 'Acceptance Tests Failed';
@@ -377,7 +375,7 @@
             'jshint': {
                 app: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.appOptions ? rtdConf.options.jshint.appOptions : {},
-                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js', '!<%= basePath %>/app/packages/**/*.js'].concat(rtdConf.options.jshint && rtdConf.options.jshint.src ? rtdConf.options.jshint.src : [])
+                    src: ['<%= basePath %>/app/**/*.js', '!<%= basePath %>/app/.meteor/**/*.js', '!<%= basePath %>/app/packages/**/*.js']
                 },
                 test: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},

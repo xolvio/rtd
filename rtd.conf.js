@@ -36,17 +36,14 @@ module.exports = {
             enabled: true,
             // if you want to customize jslint options for app and/or test code, you can do that here
             appOptions: {},
-            testOptions: {},
-            // set additional directories to ignore ie:
-            // src: ['!<%= basePath %>/app/client/javascripts/vendor/*.js']
-            src: []
-        },
-        coffeelint: {
-            enabled: true,
-            // if you want to customize coffeelint options for app and/or test code, you can do that here
-            appOptions: {},
             testOptions: {}
         },
+	    coffeelint: {
+		    enabled: true,
+		    // if you want to customize coffeelint options for app and/or test code, you can do that here
+			appOptions: {},
+	        testOptions: {}
+	    },
         // if you have client libraries, you'll want to exclude them from test coverage
         instrumentationExcludes: ['**/packages/**', '**/3rd/**', 'fixture.js', 'fixture.coffee'],
         // If your dev environment has a stand-alone mongo service, you should disabled this
@@ -57,8 +54,8 @@ module.exports = {
         darwin: {
             chromeDriverName: 'chromedriver',
             chromeDriverOs: 'mac32',
-            chromeDriverVersion: '2.6',
-            chromeDriverSha: '4643652d403961dd9a9a1980eb1a06bf8b6e9bad'
+            chromeDriverVersion: '2.9',
+            chromeDriverSha: '16553f51a165dd202e842b99675ca6e5e1eb2a69'
         },
         linux: {
             chromeDriverName: 'chromedriver',
@@ -66,7 +63,7 @@ module.exports = {
             chromeDriverVersion: '2.9',
             chromeDriverSha: '6d8498437795482bb82739e13dfc13e4bcfdd40b'
         },
-        seleniumServeVersion: '2.32.0',
-        seleniumServeSha: 'c94e6d5392b687d3a141a35f5a489f50f01bef6a'
+        seleniumServeVersion: '2.39.0',
+        seleniumServeSha: 'f2391600481dd285002d04b66916fc4286ff70ce'
     }
 };
