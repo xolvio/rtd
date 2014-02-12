@@ -70,7 +70,7 @@
 	    tasks.push('coffeelint:test');
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
-        //tasks.push('closeWebdriverSessions');
+        tasks.push('closeWebdriverSessions');
         return tasks;
     }
 
