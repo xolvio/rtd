@@ -442,42 +442,9 @@
         });
 
         grunt.registerTask('closeWebdriverSessions', 'closeWebdriverSessions', function () {
-
-            var done = this.async(),
-                request = require('request');
-
-            var getWebdriverSessions = function (callback) {
-                request.get({
-                    url: 'http://localhost:4444/wd/hub/sessions',
-                    headers: {
-                        'Content-type': 'application/json'
-                    }
-                }, function (error, response, body) {
-                    callback(JSON.parse(body).value);
-                });
-            };
-
-            var deleteWebdriverSession = function (sessionId) {
-                request.del({
-                    url: 'http://localhost:4444/wd/hub/session/' + sessionId,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                }, function () {
-                    done(); // TODO needs to wait for sessions to have closed
-                });
-            };
-
-            var deleteWebdriverSessions = function (sessions) {
-                for (var i = 0; i < sessions.length; i += 1) {
-                    deleteWebdriverSession(sessions[i].id);
-                }
-            };
-
-            getWebdriverSessions(function (sessions) {
-                deleteWebdriverSessions(sessions);
-            });
-
+            var helper = require(PROJECT_BASE_PATH + '/test/rtd/webdrivers/webdriver-helper'),
+                done = this.async();
+            helper.quitDriverPromise().then(done);
         });
 
         grunt.registerTask('outputPorts', 'outputPorts', function () {
