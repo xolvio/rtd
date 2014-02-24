@@ -37,12 +37,12 @@
             tasks.push('jshint:test');
         }
 
-	    if (!runOnceMode && rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
-		    tasks.push('coffeelint:app');
-		    tasks.push('coffeelint:test');
-	    }
+        if (!runOnceMode && rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+            tasks.push('coffeelint:app');
+            tasks.push('coffeelint:test');
+        }
 
-	    tasks.push('bgShell:karmaRun');
+        tasks.push('bgShell:karmaRun');
         tasks.push('bgShell:synchronizeMirrorApp');
         tasks.push('bgShell:instrumentCode');
 
@@ -64,10 +64,14 @@
 
     function constructRunOnceTasks(startupTasks) {
         var tasks = [];
-        tasks.push('jshint:app');
-        tasks.push('jshint:test');
-	    tasks.push('coffeelint:app');
-	    tasks.push('coffeelint:test');
+        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+            tasks.push('jshint:app');
+            tasks.push('jshint:test');
+        }
+        if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+            tasks.push('coffeelint:app');
+            tasks.push('coffeelint:test');
+        }
         tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
         tasks.push.apply(tasks, constructWatchTasks(true));
         tasks.push('closeWebdriverSessions');
@@ -274,7 +278,7 @@
                         if (err) {
                             var message;
                             // Horrible mechanism, but done doesn't seem to work inside tasks
-                            if (! stdout) {
+                            if (!stdout) {
                                 message = 'Unit Tests Failed (internal)';
                             } else if (stdout.toLowerCase().indexOf('unit') !== -1) {
                                 message = 'Unit Tests Failed';
@@ -382,23 +386,23 @@
                     src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js', '!<%= basePath %>/test/rtd.conf.js', '!<%= basePath %>/test/karma.conf.js']
                 }
             },
-	        'coffeelint': {
-		        app: {
-			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.appOptions ? rtdConf.options.coffeelint.appOptions : {},
-			        src: ['<%= basePath %>/app/**/*.coffee', '!<%= basePath %>/app/.meteor/**/*.coffee', '!<%= basePath %>/app/packages/**/*.coffee']
-		        },
-		        test: {
-			        options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.testOptions ? rtdConf.options.coffeelint.testOptions : {},
-			        src: ['<%= basePath %>/test/**/*.coffee', '!<%= basePath %>/test/rtd/**/*.coffee']
-		        }
-	        },
+            'coffeelint': {
+                app: {
+                    options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.appOptions ? rtdConf.options.coffeelint.appOptions : {},
+                    src: ['<%= basePath %>/app/**/*.coffee', '!<%= basePath %>/app/.meteor/**/*.coffee', '!<%= basePath %>/app/packages/**/*.coffee']
+                },
+                test: {
+                    options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.testOptions ? rtdConf.options.coffeelint.testOptions : {},
+                    src: ['<%= basePath %>/test/**/*.coffee', '!<%= basePath %>/test/rtd/**/*.coffee']
+                }
+            },
             cucumberjs: rtdConf.options.cucumberjs ? rtdConf.options.cucumberjs : {}
         });
         grunt.loadNpmTasks('grunt-bg-shell');
         grunt.loadNpmTasks('grunt-contrib-watch');
         grunt.loadNpmTasks('grunt-zip');
         grunt.loadNpmTasks('grunt-contrib-jshint');
-	    grunt.loadNpmTasks('grunt-coffeelint');
+        grunt.loadNpmTasks('grunt-coffeelint');
         grunt.loadNpmTasks('grunt-cucumber');
 
         grunt.registerTask('chmod', 'chmod', function () {
