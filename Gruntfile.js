@@ -29,15 +29,15 @@
         return tasks;
     };
 
-    var constructWatchTasks = function (runOnceMode) {
+    var constructWatchTasks = function () {
         var tasks = [];
 
-        if (!runOnceMode && rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
+        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
             tasks.push('jshint:app');
             tasks.push('jshint:test');
         }
 
-        if (!runOnceMode && rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
+        if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
             tasks.push('coffeelint:app');
             tasks.push('coffeelint:test');
         }
@@ -64,16 +64,9 @@
 
     function constructRunOnceTasks(startupTasks) {
         var tasks = [];
-        if (rtdConf.options.jshint && rtdConf.options.jshint.enabled) {
-            tasks.push('jshint:app');
-            tasks.push('jshint:test');
-        }
-        if (rtdConf.options.coffeelint && rtdConf.options.coffeelint.enabled) {
-            tasks.push('coffeelint:app');
-            tasks.push('coffeelint:test');
-        }
-        tasks = tasks.concat(startupTasks.slice(0, startupTasks.length - 1));
-        tasks.push.apply(tasks, constructWatchTasks(true));
+        tasks = tasks.concat(startupTasks);
+        tasks.pop(); // Remove the watch
+        tasks.push.apply(tasks, constructWatchTasks());
         tasks.push('closeWebdriverSessions');
         return tasks;
     }
