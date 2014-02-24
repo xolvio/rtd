@@ -58,5 +58,19 @@
         }
         return deferred;
     };
+
+    exports.quitDriverPromise = function () {
+        var deferred = webdriver.promise.defer();
+        if (driver) {
+            driver.quit().then(deferred.fulfill);
+        } else {
+            waitForCallback = function () {
+                driver.quit().then(function () {
+                    deferred.fulfill();
+                });
+            }
+        }
+        return deferred;
+    };
     exports.driver = driver;
 }());
