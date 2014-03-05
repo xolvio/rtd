@@ -5,6 +5,7 @@
         webdriver = require('selenium-webdriver'),
         executer = require('../node_modules/selenium-webdriver/executors'),
         driver = null,
+        waitForCallback = null,
         newRun;
 
     function getWebdriverSessions(callback) {
@@ -23,11 +24,15 @@
                 withCapabilities(webdriver.Capabilities.chrome()).
                 usingServer("http://localhost:4444/wd/hub").
                 build();
+
             driver.manage().timeouts().setScriptTimeout(500);
             driver.manage().timeouts().implicitlyWait(500);
         } else {
             driver = webdriver.WebDriver.attachToSession(executer.createExecutor("http://localhost:4444/wd/hub"), sessions[0].id);
         }
+        if (waitForCallback) {
+            waitForCallback();
+    }
     }
 
     getWebdriverSessions(reuseOrCreateSession);
@@ -50,6 +55,20 @@
             runs(function () {
                 deferred.fulfill(driver);
             });
+        }
+        return deferred;
+    };
+
+    exports.quitDriverPromise = function () {
+        var deferred = webdriver.promise.defer();
+        if (driver) {
+            driver.quit().then(deferred.fulfill);
+        } else {
+            waitForCallback = function () {
+                driver.quit().then(function () {
+                    deferred.fulfill();
+                });
+            }
         }
         return deferred;
     };
