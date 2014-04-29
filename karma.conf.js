@@ -3,17 +3,21 @@
 // THEN RTD WILL USE THAT FILE INSTEAD.
 // *********************************************************************************************************************
 
+var path = require('path'),
+    PROJECT_BASE_PATH = process.cwd(),
+    RTD_BASE_PATH = path.dirname(require.resolve('rtd'));
+
 module.exports = function(config){
     config.set({
         // base path, that will be used to resolve files and exclude
-        basePath : '../..',
+        basePath : PROJECT_BASE_PATH,
 
         // list of files / patterns to load in the browser
         files : [
 
             // stubs come first so they can be available when all the units need them
-            'test/rtd/lib/*-stubs.js',
-            'test/rtd/lib/*-stubs.coffee',
+            RTD_BASE_PATH + '/lib/*-stubs.js',
+            RTD_BASE_PATH + '/lib/*-stubs.coffee',
 
             // the reason we load unit tests next is because they don't depend on the app. On the contrary,
             // they set mocks ahead of time for the units so they have to be loaded first
