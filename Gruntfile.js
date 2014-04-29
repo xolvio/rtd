@@ -1,16 +1,21 @@
 (function () {
     "use strict";
 
-    var PROJECT_BASE_PATH = __dirname + '/../..',
-        DEFAULT_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd/karma.conf.js',
+    var PROJECT_BASE_PATH = process.env.PWD,
+        RTD_BASE_PATH = __dirname,
+        DEFAULT_KARMA_CONFIG_FILE = RTD_BASE_PATH + '/karma.conf.js',
         CUSTOM_KARMA_CONFIG_FILE = PROJECT_BASE_PATH + '/test/karma.conf.js',
-        DEFAULT_RTD_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd/rtd.conf.js',
+        DEFAULT_RTD_CONFIG_FILE = RTD_BASE_PATH + '/rtd.conf.js',
         CUSTOM_RTD_CONFIG_FILE = PROJECT_BASE_PATH + '/test/rtd.conf.js',
         http = require('http'),
         fs = require('fs'),
+        path = require('path'),
         growl = require('growl'),
         libnotify = require('libnotify'),
-        rtdConf = require(fs.existsSync(CUSTOM_RTD_CONFIG_FILE) ? CUSTOM_RTD_CONFIG_FILE : DEFAULT_RTD_CONFIG_FILE);
+        rtdConf = require(fs.existsSync(CUSTOM_RTD_CONFIG_FILE) ? CUSTOM_RTD_CONFIG_FILE : DEFAULT_RTD_CONFIG_FILE),
+        karmaPath = path.resolve(require.resolve('karma'), '../../bin/karma'),
+        istanbulPath = path.resolve(require.resolve('istanbul'), '../lib/cli.js'),
+        jasminePath = path.resolve(require.resolve('jasmine-node'), '../../../bin/jasmine-node')
 
     var constructStartupTasks = function () {
         var tasks = [];
@@ -102,7 +107,7 @@
         }
 
         var re = /\.\/app/g;
-        data = data.replace(re, PROJECT_BASE_PATH.substring(0, PROJECT_BASE_PATH.indexOf('/test/rtd')) + '/app');
+        data = data.replace(re, PROJECT_BASE_PATH + '/app');
 
         var options = {
             hostname: host,
@@ -248,8 +253,8 @@
                 files: [
                     '<%= basePath %>/test/unit/**/*.js',
                     '<%= basePath %>/test/unit/**/*.coffee',
-                    '<%= basePath %>/test/rtd/lib/**/*.js',
-                    '<%= basePath %>/test/rtd/lib/**/*.coffee',
+                    RTD_BASE_PATH + '/lib/**/*.js',
+                    RTD_BASE_PATH + '/lib/**/*.coffee',
                     '<%= basePath %>/test/acceptance/**/*.js',
                     '<%= basePath %>/test/acceptance/**/*.coffee',
                     '<%= basePath %>/test/features/**/*.js',
@@ -287,11 +292,10 @@
                     }
                 },
                 startKarma: {
-                    cmd: 'cd <%= basePath %>/test/rtd;' +
-                        'karma start <%= karmaConfigFile %>'
+                    cmd: 'cd <%= basePath %>; ' + karmaPath + ' start <%= karmaConfigFile %>'
                 },
                 instrumentCode: {
-                    cmd: 'istanbul instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: istanbulPath + ' instrument <%= basePath %>/app <%= istanbulExclude %> <%= istanbulOptions %> -o <%= basePath %>/build/mirror_app' + instrumentationExcludes + (debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false
                 },
                 killAll: {
@@ -328,8 +332,8 @@
                     cmd: 'rsync -av --delete -q --delay-updates --force --exclude=".meteor/local" <%= basePath %>/app/ <%= basePath %>/build/mirror_app;' +
                         'mkdir -p <%= basePath %>/build/mirror_app/packages;' +
                         'cd <%= basePath %>/build/mirror_app/packages;' +
-                        'ln -s ../../../test/rtd/lib/istanbul-middleware-port .;' +
-                        'ln -s ../../../test/rtd/lib/meteor-fixture .;' +
+                        'ln -s ' + RTD_BASE_PATH + '/lib/istanbul-middleware-port .;' +
+                        'ln -s ' + RTD_BASE_PATH + '/lib/meteor-fixture .;' +
                         'cp <%= basePath %>/test/acceptance/fixtures/* <%= basePath %>/build/mirror_app/server;' +
                         'echo >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
                         'echo http >> <%= basePath %>/build/mirror_app/.meteor/packages;' +
@@ -338,22 +342,21 @@
                     bg: false
                 },
                 karmaRun: {
-                    cmd: 'echo ; echo - - - Running unit tests - - -;' +
-                        'karma run  <%= karmaConfigFile %> --reporters progress,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
+                    cmd: 'echo ; echo - - - Running unit tests - - -;' + karmaPath + ' run  <%= karmaConfigFile %> --reporters progress,junit' + (rtdConf.output.karma || debug ? ';' : ' > /dev/null 2>&1;'),
                     bg: false,
                     fail: true
                 },
                 runTests: {
                     cmd: 'echo - - - Running acceptance tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --captureExceptions --junitreport --output <%= basePath %>/build/reports/ --coffee <%= basePath %>/test/acceptance/;',
+                        jasminePath + ' --verbose --captureExceptions --junitreport --output <%= basePath %>/build/reports/ --coffee <%= basePath %>/test/acceptance/;',
                     bg: false,
                     fail: true
                 },
                 runCoverageCheck: {
                     cmd: 'echo - - - Running coverage tests - - -;' +
                         'export NODE_PATH="$(pwd)/node_modules";' +
-                        'jasmine-node --verbose --junitreport --output <%= basePath %>/build/reports/ <%= basePath %>/test/rtd/lib --config THRESHOLDS "<%= coverageThresholds %>";',
+                        jasminePath + ' --verbose --junitreport --output <%= basePath %>/build/reports/ ' + RTD_BASE_PATH + '/lib --config THRESHOLDS "<%= coverageThresholds %>";',
                     bg: false,
                     fail: true
                 },
@@ -365,8 +368,8 @@
             },
             'unzip': {
                 chromeDriver: {
-                    src: '<%= basePath %>/test/rtd/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>.zip',
-                    dest: '<%= basePath %>/test/rtd/lib/bin/'
+                    src: RTD_BASE_PATH + '/lib/bin/<%= chromeDriverName %>_<%= chromeDriverOs %>.zip',
+                    dest: RTD_BASE_PATH + '/lib/bin/'
                 }
             },
             'jshint': {
@@ -376,7 +379,7 @@
                 },
                 test: {
                     options: rtdConf.options.jshint && rtdConf.options.jshint.testOptions ? rtdConf.options.jshint.testOptions : {},
-                    src: ['<%= basePath %>/test/**/*.js', '!<%= basePath %>/test/rtd/**/*.js', '!<%= basePath %>/test/rtd.conf.js', '!<%= basePath %>/test/karma.conf.js']
+                    src: ['<%= basePath %>/test/**/*.js', '!' + RTD_BASE_PATH + '/**/*.js', '!<%= basePath %>/test/rtd.conf.js', '!<%= basePath %>/test/karma.conf.js']
                 }
             },
             'coffeelint': {
@@ -386,7 +389,7 @@
                 },
                 test: {
                     options: rtdConf.options.coffeelint && rtdConf.options.coffeelint.testOptions ? rtdConf.options.coffeelint.testOptions : {},
-                    src: ['<%= basePath %>/test/**/*.coffee', '!<%= basePath %>/test/rtd/**/*.coffee']
+                    src: ['<%= basePath %>/test/**/*.coffee', '!' + RTD_BASE_PATH + '/**/*.coffee']
                 }
             },
             cucumberjs: rtdConf.options.cucumberjs ? rtdConf.options.cucumberjs : {}
@@ -399,7 +402,7 @@
         grunt.loadNpmTasks('grunt-cucumber');
 
         grunt.registerTask('chmod', 'chmod', function () {
-            fs.chmodSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver', '755');
+            fs.chmodSync(RTD_BASE_PATH + '/lib/bin/chromedriver', '755');
         });
 
         ['warn', 'fatal'].forEach(function (level) {
@@ -419,8 +422,8 @@
 
         grunt.registerTask('downloadAndOrStartSelenium', 'downloadAndOrStartSelenium', function () {
             var done = this.async();
-            require(PROJECT_BASE_PATH + '/test/rtd/lib/selenium-launcher.js')(function (/*er, selenium*/) {
-                if (!fs.existsSync(PROJECT_BASE_PATH + '/test/rtd/lib/bin/chromedriver')) {
+            require(RTD_BASE_PATH + '/lib/selenium-launcher.js')(function (/*er, selenium*/) {
+                if (!fs.existsSync(RTD_BASE_PATH + '/lib/bin/chromedriver')) {
                     grunt.task.run('unzip', 'chmod');
                 }
                 done();
@@ -435,7 +438,7 @@
         });
 
         grunt.registerTask('closeWebdriverSessions', 'closeWebdriverSessions', function () {
-            var helper = require(PROJECT_BASE_PATH + '/test/rtd/webdrivers/webdriver-helper'),
+            var helper = require(RTD_BASE_PATH + '/webdrivers/webdriver-helper'),
                 done = this.async();
             helper.quitDriverPromise().then(done);
         });
