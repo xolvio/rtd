@@ -71,17 +71,6 @@
     setup):
 </p>
 
-<p><b>NOTE: Due to a <a href="https://github.com/karma-runner/karma/issues/558#issuecomment-18707232">bug in
-    SocketIO</a>, Karma doesn't work with the latest version of Node and therefore unit tests will fail.
-    Downgrading to v0.10.5 works.</b></p>
-
-<div class="highlight"><pre><span class="nv">$ </span>npm i -g karma@0.8.6 phantomjs@1.9.0-6 istanbul@0.1.39 grunt-cli selenium-webdriver jasmine-node
-</pre>
-</div>
-
-<p>If you have any issues with phantomJS, you may need to <a href="https://github.com/xolvio/rtd/issues/9">do
-    this</a>.</p>
-
 <p>For growl notifications, you need to install a notifier if you don't already have it:</p>
 
 <div class="highlight">
@@ -89,16 +78,6 @@
 <span class="nv">$ </span>sudo gem install terminal-notifier
 LINUX:
 <span class="nv">$ </span>sudo apt-get install libnotify-bin</pre>
-</div>
-
-<p>If you get an openssl error, you should do this:</p>
-
-<div class="highlight">
-<pre><span class="nv">$ </span>rvm implode
-<span class="nv">$ </span>bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
-<span class="nv">$ </span>rvm autolibs enable
-<span class="nv">$ </span>rvm reinstall all --force
-</pre>
 </div>
 
 <p>Next you need to move your meteor code into an app directory the structure of your application as
@@ -111,17 +90,7 @@ LINUX:
     │ │ └── &lt;your meteor code here&gt;
 </code></pre>
 
-<p>RTD will live under the test directory. You can use a git sub-module as follows: (advised method as you'll
-    get updates to RTD as we do them)</p>
-
-<div class="highlight">
-<pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;
-<span class="nv">$ </span>mkdir -p ./test/acceptance/fixtures; mkdir ./test/unit; touch ./test/acceptance/fixtures/empty.js;
-<span class="nv">$ </span>git submodule add git@github.com:xolvio/rtd.git ./test/rtd; <span class="nb">cd test</span>/rtd; npm install;
-</pre>
-</div>
-
-<p>Once the above runs, you should see this:</p>
+<p>You will also want to structure your tests as follows:</p>
 
 <pre><code>├── &lt;project root&gt;
     │ ├── .git
@@ -131,29 +100,33 @@ LINUX:
     │ ├── test
     │ │ └── acceptance
     │ │ │ └── fixtures
-    │ │ │ │ └── empty.js
+    │ │ │ │ └── &lt;your fixture code here&gt;
     │ │ │ └── &lt;your end-to-end tests here&gt;
-    │ │ └── rtd
-    │ │ │ └── &lt;a whole bunch of stuff&gt;
     │ │ └── unit
     │ │ │ └── &lt;your unit tests here&gt;
+    │ │ │ └── &lt;THERE MUST BE ONE UNIT TEST AT LEAST&gt;
 </code></pre>
 
-<p>Now every time you start development, just run this: (the first time will take a few minutes as
-    selenium-server &amp; chromedriver are downloaded)</p>
+<p>Now you can add RTD to your package.json like <a href="https://github.com/xolvio/meteor-rtd-example-project/blob/master/package.json">in the example</a> (you'll need all of the dev dependencies there too).</p>
 
+<p>To have RTD run in development mode, you type:</p>
 <div class="highlight">
-<pre><span class="nv">$ </span><span class="nb">cd</span> &lt;your project root&gt;/test/rtd
-<span class="nv">$ </span>./rtd
+<pre><code><span class="nv">$ </span> ./node_modules/.bin/rtd
 or
-<span class="nv">$ </span>./rtd --debug
-</pre>
+<span class="nv">$</span> ./node_modules/.bin/rtd --debug
+</code></pre>
 </div>
 
-<p>Enjoy using RTD</p>
+<p>And to test your app once (for pre-commit or on a CI server) you type:</p>
+<div class="highlight">
+<pre><code><span class="nv">$ </span>./node_modules/.bin/rtd runOnce --debug
+</code></pre>
+</div>
 
 <p>To see the actual coverage report in detail, go to <a href="http://localhost:8000/coverage">http://localhost:8000/coverage</a>
 </p>
+
+<p>Enjoy using RTD</p>
 
 <h2>
     <a name="customizing" class="anchor" href="#customizing"><span class="octicon octicon-link"></span></a>Customizing
@@ -210,12 +183,12 @@ or
     <tr>
         <td>Exceptions</td>
         <td>Logging</td>
-        <td><em>Coming Soon</em></td>
+        <td><em>Future work</em></td>
     </tr>
     <tr>
         <td>Performance</td>
         <td>Monitoring</td>
-        <td><em>Coming Soon</em></td>
+        <td><em>Future work</em></td>
     </tr>
 </table>
 <p>Of course each one of those detection mechanisms needs to be implemented, and this is often missed out all
@@ -253,9 +226,7 @@ or
 <!-- FOOTER  -->
 <div id="footer_wrap" class="outer">
     <footer class="inner">
-        <p class="copyright">RTD from Xolvio maintained by <a href="https://github.com/xolvio">xolvio</a></p>
-
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+        <p class="copyright">RTD from Xolv.io maintained by <a href="https://github.com/xolvio">@xolvio</a></p>
     </footer>
 </div>
 
