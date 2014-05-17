@@ -207,7 +207,7 @@
 
     var getGruntDebugMode = function (grunt) {
         var gruntFlags = grunt.option.flags();
-        for (var i = 0; i < gruntFlags.length; gruntFlags += 1) {
+        for (var i = 0; i < gruntFlags.length; i += 1) {
             if (gruntFlags[i].indexOf('--debug') !== -1) {
                 return true;
             }
