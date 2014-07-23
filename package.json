@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "istanbul": "~0.2.4",
-    "jasmine-node": "~1.13.1",
+    "jasmine-node": "~1.14.5",
     "selenium-webdriver": "~2.39.0",
     "grunt": "~0.4.2",
     "grunt-bg-shell": "~2.3.1",
