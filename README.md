@@ -1,6 +1,6 @@
-###- - - - DEPRECATED - - - -
+###DEPRECATED!
 
-Please see [Velocity](https://github.com/meteor-velocity/velocity).
+Please see [Velocity](https://github.com/meteor-velocity/velocity), it's the next generation of RTD and is community managed.
 
 You may also want to check out [The Meteor Testing Manaul](http://www.meteortesting.com/home).
 
