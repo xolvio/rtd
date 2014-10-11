@@ -2,7 +2,7 @@
 
 Please see [Velocity](https://github.com/meteor-velocity/velocity), it's the next generation of RTD and is community managed.
 
-You may also want to check out [The Meteor Testing Manaul](http://www.meteortesting.com/home).
+You may also want to check out [The Meteor Testing Manual](http://www.meteortesting.com/home).
 
 
 RTD - The Test Runner for Meteor
