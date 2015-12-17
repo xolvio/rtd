@@ -1,8 +1,8 @@
 ###DEPRECATED!
 
-Please see [Velocity](https://github.com/meteor-velocity/velocity), it's the next generation of RTD and is community managed.
+Please see our [Chimp](https://xolv.io/products/chimp) testing package, which has 1st class Meteor support built in.
 
-You may also want to check out [The Meteor Testing Manual](http://www.meteortesting.com/home).
+You may want to check out [The Meteor Testing Manual](http://www.meteortesting.com/home).
 
 
 RTD - The Test Runner for Meteor
